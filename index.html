@@ -1323,7 +1323,7 @@ const LISTINGS = [
 ];
 let FEATURED_ID = 3;
 /* İlanlar yönetim panelinden (Supabase) gelir; bağlantı yoksa son görülen liste ya da yukarıdaki yedek kullanılır */
-const SB_URL = "__SB_URL__", SB_KEY = "__SB_KEY__";
+const SB_URL = "https://dlwquywjohyeiqwouhiq.supabase.co", SB_KEY = "sb_publishable_IqUrGD9z7jgPqMycVvO2Lg_MicABHGp";
 let AGENTS = {}, DATA_READY = false;
 const fromRow = r => ({...r, pal: r.id % PALS_N, photos: r.photos||[], features: r.features||[], salon: r.salon ?? 1, floor: r.floor||"—", heat: r.heat||"—"});
 const PALS_N = 6;
