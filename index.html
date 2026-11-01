@@ -1179,17 +1179,17 @@ form.cform{background:var(--surface);border:1px solid var(--line);border-radius:
       <div class="full">
         <span class="label" style="display:block;margin-bottom:10px">Ne için yazıyorsunuz?</span>
         <div class="topics" id="topics" role="group" aria-label="Konu">
-          <button type="button" class="chip" aria-pressed="true">Ev arıyorum</button>
-          <button type="button" class="chip" aria-pressed="false">Evimi satmak istiyorum</button>
-          <button type="button" class="chip" aria-pressed="false">Kiraya vermek istiyorum</button>
-          <button type="button" class="chip" aria-pressed="false">Yatırım</button>
+          <button type="button" class="chip" data-k="Ev arıyorum" aria-pressed="true">Ev arıyorum</button>
+          <button type="button" class="chip" data-k="Evimi satmak istiyorum" aria-pressed="false">Evimi satmak istiyorum</button>
+          <button type="button" class="chip" data-k="Kiraya vermek istiyorum" aria-pressed="false">Kiraya vermek istiyorum</button>
+          <button type="button" class="chip" data-k="Yatırım" aria-pressed="false">Yatırım</button>
         </div>
       </div>
       <div class="inp"><label class="label" for="cName">Adınız soyadınız</label><input id="cName" autocomplete="name"></div>
       <div class="inp"><label class="label" for="cPhone">Telefonunuz</label><input id="cPhone" type="tel" autocomplete="tel" placeholder="05xx xxx xx xx"></div>
       <div class="inp full"><label class="label" for="cMsg">Mesajınız</label><textarea id="cMsg" placeholder="Hangi ilçe, kaç oda, bütçeniz..."></textarea></div>
       <div class="form-msg" id="formMsg" role="status"></div>
-      <div class="full"><button class="btn btn-cta" type="submit" style="width:100%;padding:17px">Beni arayın</button></div>
+      <div class="full"><button class="btn btn-cta" type="submit" style="width:100%;padding:17px"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="vertical-align:-3px;margin-inline-end:8px"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.2-.7-2.7-1.1-4.4-3.8-4.6-4-.1-.2-1.1-1.4-1.1-2.7s.7-1.9.9-2.2c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 1.9 1.1 1 2 1.3 2.3 1.4.3.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.1.1.6-.1 1.2Z"/></svg><span>WhatsApp'tan gönder</span></button><p class="wa-note" style="margin:10px 0 0;font-size:.84rem;color:#9fb0c9;text-align:center">Bilgileriniz WhatsApp üzerinden doğrudan danışmanımıza iletilir.</p></div>
     </form>
   </div>
 
@@ -1233,11 +1233,11 @@ form.cform{background:var(--surface);border:1px solid var(--line);border-radius:
     <div class="alert">
       <div><h3>Yeni ilan çıkınca ilk siz duyun</h3><p>İstediğiniz ilçede uygun bir ev portföyümüze girdiğinde size WhatsApp'tan haber verelim.</p></div>
       <form id="alertForm" novalidate>
-        <label class="sr" for="aPhone" class="sr-only">Telefon</label>
+        <label class="sr-only" for="aPhone">Telefon</label>
         <input id="aPhone" type="tel" placeholder="Telefonunuz" autocomplete="tel">
-        <label class="sr" for="aLoc" class="sr-only">İlçe</label>
+        <label class="sr-only" for="aLoc">İlçe</label>
         <select id="aLoc"><option value="">Tüm Van</option></select>
-        <button class="btn btn-cta" type="submit">Haber ver</button>
+        <button class="btn btn-cta" type="submit"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="vertical-align:-3px;margin-inline-end:8px"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.2-.7-2.7-1.1-4.4-3.8-4.6-4-.1-.2-1.1-1.4-1.1-2.7s.7-1.9.9-2.2c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 1.9 1.1 1 2 1.3 2.3 1.4.3.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.1.1.6-.1 1.2Z"/></svg><span>Haber ver</span></button>
         <span class="msg" id="aMsg" role="status"></span>
       </form>
     </div>
@@ -1539,7 +1539,14 @@ function valuate(){
 $("vLoc").addEventListener("change",()=>{fillMah();valuate();}); $("vMah").addEventListener("change",valuate);
 $("vM2").addEventListener("input",valuate); $("vA").addEventListener("input",valuate);
 $("valForm").addEventListener("submit",e=>e.preventDefault());
-$("vCta").addEventListener("click",()=>{ $("cMsg").value=`Ücretsiz yerinde değerleme istiyorum: ${vType==="k"?"konut":"arsa"}, ${$("vLoc").value}${$("vMah").value?" / "+$("vMah").value:""}.`; });
+$("vCta").addEventListener("click",()=>{
+  const sel=k=>{const b=document.querySelector(`#valForm [data-key="${k}"] [aria-pressed="true"]`);return b?b.textContent.trim():"";};
+  const yer=`${$("vLoc").value}${$("vMah").value?" / "+$("vMah").value:""}`;
+  const det=vType==="k"?`konut, ${$("vM2").value} m², ${sel("rooms")}, bina yaşı ${sel("age")}, ${sel("floor").toLocaleLowerCase("tr")}`:`arsa, ${fmt(+$("vA").value)} m²`;
+  const est=/\d/.test($("vOut").textContent)?` Sitedeki ön değer: ${$("vOut").textContent}.`:"";
+  $("cMsg").value=`Ücretsiz yerinde değerleme istiyorum: ${yer}, ${det}.${est}`;
+  const t=$("topics").querySelector('[data-k="Evimi satmak istiyorum"]'); if(t) t.click();
+});
 fillMah(); valuate();
 
 /* Fiyat rehberi */
@@ -1655,13 +1662,26 @@ $("topics").addEventListener("click", e=>{
   const b=e.target.closest("button"); if(!b) return;
   $("topics").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed","false")); b.setAttribute("aria-pressed","true");
 });
+/* WhatsApp'a gönderme */
+const WA_NO="905452336520";
+const LANG_NAME={tr:"",en:"İngilizce",fa:"Farsça"};
+function waOpen(lines){
+  const lg=(typeof LANG!=="undefined"&&LANG!=="tr")?LANG_NAME[LANG]:"";
+  if(lg) lines.push(`(Site dili: ${lg})`);
+  lines.push("— ucgulgroup.com");
+  const url=`https://wa.me/${WA_NO}?text=${encodeURIComponent(lines.filter(Boolean).join("\n"))}`;
+  const w=window.open(url,"_blank","noopener");
+  if(!w) location.href=url;
+}
 $("contactForm").addEventListener("submit", e=>{
   e.preventDefault();
-  const name=$("cName").value.trim(), phone=$("cPhone").value.replace(/\D/g,""), m=$("formMsg");
+  const name=$("cName").value.trim(), phoneRaw=$("cPhone").value.trim(), phone=phoneRaw.replace(/\D/g,""), msg=$("cMsg").value.trim(), m=$("formMsg");
   m.className="form-msg show";
   if(!name||phone.length<10){ m.classList.add("err"); m.textContent="Lütfen adınızı ve en az 10 haneli telefon numaranızı yazın."; return; }
+  const topic=($("topics").querySelector('[aria-pressed="true"]')||{}).dataset?.k||"";
+  waOpen(["Merhaba 3M Yapı, web sitenizden yazıyorum.", topic&&`Konu: ${topic}`, `Ad soyad: ${name}`, `Telefon: ${phoneRaw}`, msg&&`Mesaj: ${msg}`]);
   m.classList.add("ok");
-  m.textContent=`Teşekkürler ${name.split(" ")[0]}. Bu önizleme sürümünde form henüz bir e-posta ya da CRM sistemine bağlı değil; yayına alırken bağlanacak.`;
+  m.textContent="WhatsApp açıldı. Mesajınızı bize iletmek için WhatsApp'ta “Gönder”e basın.";
 });
 
 /* Menü */
@@ -1747,7 +1767,9 @@ $("guides").addEventListener("click",e=>{
 /* Haber ver */
 $("alertForm").addEventListener("submit",e=>{
   e.preventDefault(); const ph=$("aPhone").value.replace(/\D/g,""), m=$("aMsg"); m.classList.add("show");
-  m.textContent = ph.length<10 ? "Lütfen en az 10 haneli telefon numaranızı yazın." : "Teşekkürler. Bu önizleme sürümünde kayıt henüz bir sisteme bağlı değil; yayına alırken bağlanacak.";
+  if(ph.length<10){ m.textContent="Lütfen en az 10 haneli telefon numaranızı yazın."; return; }
+  waOpen(["Merhaba 3M Yapı, yeni ilan çıkınca haber almak istiyorum.", `Bölge: ${$("aLoc").value||"Tüm Van"}`, `Telefon: ${$("aPhone").value.trim()}`]);
+  m.textContent="WhatsApp açıldı. Kaydınızı tamamlamak için WhatsApp'ta “Gönder”e basın.";
 });
 
 $("copyAddr").addEventListener("click",async e=>{ const t="3M Yapı Gayrimenkul İnşaat Yapı, Otobüs Durağı, Yeni Mah., 13. Cd., 65170 Edremit / Van (Gebze Su Sporları karşısı) — https://www.google.com/maps?q=38.423618,43.279607"; try{ await navigator.clipboard.writeText(t); e.target.textContent="Adres kopyalandı ✓"; }catch(err){ e.target.textContent=t; } });
@@ -1760,6 +1782,8 @@ Object.assign(I18N.en,{"Şehir merkezi, Cumhuriyet Caddesi, okullar":"City cente
 Object.assign(I18N.fa,{"3M Yapı Gayrimenkul İnşaat Yapı Yönetim Kurulu Başkanı": "رئیس هیئت‌مدیره 3M Yapı Gayrimenkul İnşaat Yapı"});
 Object.assign(I18N.fa,{"Hikayemiz": "داستان ما", "Edremit'te 86 yıllık bir güven.": "۸۶ سال اعتماد در ادرمیت.", "Bizim için gayrimenkul, bir aile mirasının bugüne taşınmış hâli. Van Gölü'nün kıyısında, Edremit'te 1940'tan bu yana yaşayan, adıyla bilinen ve sözüne güvenilen bir ailenin genç kuşağıyız.": "برای ما املاک، میراثی خانوادگی است که به امروز رسیده است. ما نسل جوان خانواده‌ای هستیم که از سال ۱۹۴۰ در ادرمیت، کنار دریاچه وان زندگی می‌کند؛ خانواده‌ای که نامش شناخته‌شده و قولش مورد اعتماد است.", "Aile büyüklerimizden öğrendiğimiz ilke basit: Komşuna nasıl davranıyorsan müşterine de öyle davran. 3M Yapı Gayrimenkul İnşaat Yapı, bu ilkeyi bugünün hızına, verisine ve dijital imkânlarına taşıyan girişimci bir gencin eseri.": "اصلی که از بزرگان خانواده آموختیم ساده است: با مشتری همان‌گونه رفتار کن که با همسایه‌ات رفتار می‌کنی. 3M Yapı Gayrimenkul İnşaat Yapı حاصل کار جوانی کارآفرین است که این اصل را با سرعت، داده‌ها و ابزارهای دیجیتال امروز همراه کرده است.", "yılından beri Edremit'te": "از این سال در ادرمیت", "Kökler": "ریشه‌ها", "1940'tan beri bir Edremit ailesi": "خانواده‌ای در ادرمیت از سال ۱۹۴۰", "Ailemiz 1940 yılında Edremit'e yerleşti; o günden bu yana buradayız. Bu topraklarda adımız güvenle anılıyor; her işimizde bu ismin sorumluluğunu taşıyoruz.": "خانواده ما در سال ۱۹۴۰ در ادرمیت ساکن شد و از آن زمان اینجاست. در این سرزمین نام ما با اعتماد یاد می‌شود و در هر کاری مسئولیت این نام را بر دوش داریم.", "Üçgül Group": "Üçgül Group", "Ticaretten inşaata, birçok alanda hizmet": "از تجارت تا ساخت‌وساز، خدمت در زمینه‌های گوناگون", "Ailemiz bugün Üçgül Group çatısı altında ticaret, inşaat ve hizmet sektörünün pek çok alanında faaliyet gösteriyor. Hizmet etmek bizim için bir iş değil, bir gönül meselesi.": "خانواده ما امروز زیر چتر Üçgül Group در تجارت، ساخت‌وساز و بسیاری از حوزه‌های بخش خدمات فعالیت می‌کند. خدمت کردن برای ما فقط یک کار نیست، موضوعی از دل است.", "Yeni kuşak": "نسل جدید", "Girişimci bir genç, yeni bir bakış": "جوانی کارآفرین، نگاهی تازه", "3M Yapı, ailenin köklü tecrübesini genç bir girişimcinin enerjisiyle buluşturuyor: güncel piyasa verisi, şeffaf süreç, dijital araçlar ve her zaman ulaşılabilen bir danışman.": "3M Yapı تجربه ریشه‌دار خانواده را با انرژی یک کارآفرین جوان پیوند می‌دهد: داده‌های به‌روز بازار، روندی شفاف، ابزارهای دیجیتال و مشاوری که همیشه در دسترس است.", "“Van bizim memleketimiz. Burada yaptığımız her iş, kendi evimize yaptığımız iştir.”": "«وان زادگاه ماست. هر کاری که اینجا انجام می‌دهیم، کاری است که برای خانه خودمان انجام می‌دهیم.»", "— Mert Üçgül, 3M Yapı Gayrimenkul İnşaat Yapı Yönetim Kurulu Başkanı": "— Mert Üçgül، رئیس هیئت‌مدیره 3M Yapı Gayrimenkul İnşaat Yapı", "Ofisimize gelin, tanışalım": "به دفتر ما بیایید، با هم آشنا شویم"});
 Object.assign(I18N.fa,{"Şehir merkezi, Cumhuriyet Caddesi, okullar":"مرکز شهر، خیابان جمهوریت، مدارس","Kampüs çevresi, yeni konut projeleri":"اطراف دانشگاه، پروژه‌های مسکونی جدید","Göl kıyısı, villa ve yazlıklar":"ساحل دریاچه، ویلا و خانه‌های ییلاقی","Kuzey kıyısının ticaret merkezi":"مرکز تجاری ساحل شمالی","Akdamar Adası'na açılan sakin kıyı":"ساحل آرام رو به جزیره آکدامار","Doğa içinde uygun fiyatlı arsalar":"زمین‌های مقرون‌به‌صرفه در دل طبیعت"});
+Object.assign(I18N.en,{"WhatsApp'tan gönder": "Send via WhatsApp", "Bilgileriniz WhatsApp üzerinden doğrudan danışmanımıza iletilir.": "Your details go straight to our consultant via WhatsApp.", "WhatsApp açıldı. Mesajınızı bize iletmek için WhatsApp'ta “Gönder”e basın.": "WhatsApp has opened. Tap “Send” in WhatsApp to deliver your message to us.", "WhatsApp açıldı. Kaydınızı tamamlamak için WhatsApp'ta “Gönder”e basın.": "WhatsApp has opened. Tap “Send” in WhatsApp to complete your request."});
+Object.assign(I18N.fa,{"WhatsApp'tan gönder": "ارسال از طریق واتس‌اپ", "Bilgileriniz WhatsApp üzerinden doğrudan danışmanımıza iletilir.": "اطلاعات شما مستقیماً از طریق واتس‌اپ به مشاور ما می‌رسد.", "WhatsApp açıldı. Mesajınızı bize iletmek için WhatsApp'ta “Gönder”e basın.": "واتس‌اپ باز شد. برای ارسال پیام، در واتس‌اپ روی «ارسال» بزنید.", "WhatsApp açıldı. Kaydınızı tamamlamak için WhatsApp'ta “Gönder”e basın.": "واتس‌اپ باز شد. برای تکمیل درخواست، در واتس‌اپ روی «ارسال» بزنید."});
 let LANG="tr";
 const T=s=>(LANG==="tr"?s:(I18N[LANG][s]!==undefined?I18N[LANG][s]:s));
 const RULES=[
