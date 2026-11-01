@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Yönetim Paneli · 3M Yapı</title>
+<link rel="icon" href="logo.png">
+<meta name="theme-color" content="#0b1f3a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0b1f3a;--navy-2:#13294b;--navy-3:#1d3a66;--orange:#f26a21;--orange-2:#ff8a3d;--bg:#f3f5f9;--surface:#fff;--ink:#0b1f3a;--muted:#5b6b82;--line:#e3e8f0;--ok:#16a34a;--warn:#d97706;--err:#dc2626;--r:14px}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:500 15px/1.5 Manrope,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:Outfit,Manrope,sans-serif;margin:0;letter-spacing:-.01em}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--orange)}
+.hidden{display:none!important}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:11px;padding:11px 18px;font-weight:700;cursor:pointer;text-decoration:none;transition:.15s;white-space:nowrap}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn-cta{background:var(--orange);color:#fff;box-shadow:0 6px 18px -8px rgba(242,106,33,.8)}
+.btn-cta:hover:not(:disabled){background:#e15c14}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-soft{background:#eef2f8;color:var(--navy)}
+.btn-soft:hover{background:#e2e8f2}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.btn-danger{background:#fdecec;color:var(--err)}
+.btn-sm{padding:7px 12px;font-size:.86rem;border-radius:9px}
+.label{display:block;font-size:.74rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.inp,select.inp,textarea.inp{width:100%;border:1.5px solid var(--line);background:#fff;border-radius:11px;padding:11px 13px;outline:none;transition:.15s}
+.inp:focus{border-color:var(--orange);box-shadow:0 0 0 4px rgba(242,106,33,.12)}
+textarea.inp{resize:vertical;min-height:110px}
+.inp.fixed{animation:fix 1.2s}
+@keyframes fix{0%{background:#fff4ec;border-color:var(--orange)}100%{background:#fff}}
+.hint{font-size:.8rem;color:var(--muted);margin-top:5px;min-height:1.1em}
+.hint.ok{color:var(--ok)}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:99px;font-size:.78rem;font-weight:800;white-space:nowrap}
+.st-yayinda{background:#e7f7ed;color:#15803d}.st-opsiyonlu{background:#fff4e5;color:#b45309}.st-taslak{background:#eef2f8;color:#475569}.st-satildi{background:#ede9fe;color:#6d28d9}.st-pasif{background:#f1f1f1;color:#6b7280}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px}
+/* Auth */
+#auth{min-height:100vh;display:grid;grid-template-columns:1.1fr 1fr}
+#auth .side{background:radial-gradient(120% 90% at 0% 100%,#f26a2155,transparent 55%),linear-gradient(160deg,var(--navy-3),var(--navy));color:#fff;padding:48px;display:flex;flex-direction:column;justify-content:space-between}
+#auth .side img{width:64px}
+#auth .side h1{font-size:2.4rem;line-height:1.1;margin-top:28px;max-width:16ch}
+#auth .side p{color:#c5d2e6;max-width:44ch}
+#auth .form-wrap{display:flex;align-items:center;justify-content:center;padding:32px}
+#auth form{width:min(400px,100%);display:flex;flex-direction:column;gap:16px}
+#auth h2{font-size:1.7rem}
+.tabs{display:flex;background:#e8edf5;border-radius:12px;padding:4px}
+.tabs button{flex:1;border:0;background:none;padding:9px;border-radius:9px;font-weight:700;color:var(--muted);cursor:pointer}
+.tabs button[aria-selected=true]{background:#fff;color:var(--navy);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.msg{padding:11px 14px;border-radius:11px;font-size:.9rem;font-weight:600}
+.msg.err{background:#fdecec;color:var(--err)}.msg.ok{background:#e7f7ed;color:#15803d}.msg.info{background:#eef4ff;color:#1e40af}
+.linkbtn{background:none;border:0;color:var(--orange);font-weight:700;cursor:pointer;padding:0}
+/* App */
+#app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+.sb{background:var(--navy);color:#cfd9e8;padding:22px 14px;display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh}
+.sb .brand{display:flex;align-items:center;gap:11px;padding:4px 10px 22px;color:#fff;text-decoration:none}
+.sb .brand img{width:38px}
+.sb .brand b{font-family:Outfit;font-size:1.02rem;line-height:1.15;display:block}
+.sb .brand small{color:var(--orange-2);font-size:.66rem;font-weight:800;letter-spacing:.1em}
+.nav{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:11px;color:#cfd9e8;text-decoration:none;font-weight:700;border:0;background:none;cursor:pointer;text-align:left;width:100%}
+.nav:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav[aria-current=page]{background:rgba(242,106,33,.16);color:#fff;box-shadow:inset 3px 0 0 var(--orange)}
+.nav svg{flex:none;opacity:.9}
+.sb .me{margin-top:auto;padding:14px 12px;border-top:1px solid rgba(255,255,255,.1);font-size:.88rem}
+.sb .me b{color:#fff;display:block}
+main{padding:28px 34px 60px;min-width:0}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.top h1{font-size:1.7rem}
+.top p{margin:4px 0 0;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px}
+.stat b{font-family:Outfit;font-size:2rem;display:block;line-height:1.1}
+.stat span{color:var(--muted);font-weight:600;font-size:.88rem}
+.stat.hl{background:linear-gradient(140deg,var(--navy-2),var(--navy));color:#fff;border:0}
+.stat.hl span{color:#c5d2e6}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.toolbar .inp{width:auto;padding:9px 12px}
+.toolbar .search{flex:1;min-width:200px}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.tbl th{font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;padding:12px 14px;background:#f8fafc;border-bottom:1px solid var(--line);font-weight:800}
+.tbl td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:0}
+.tbl tr:hover td{background:#fafbfd}
+.thumb{width:64px;height:48px;border-radius:9px;object-fit:cover;background:linear-gradient(135deg,var(--navy-3),var(--orange-2));display:block}
+.ttl b{display:block;max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ttl small{color:var(--muted);font-weight:600}
+.num{font-variant-numeric:tabular-nums}
+.price{font-family:Outfit;font-weight:700;white-space:nowrap}
+.st-sel{border:0;border-radius:99px;padding:4px 10px;font-weight:800;font-size:.8rem;cursor:pointer}
+.star{background:none;border:0;cursor:pointer;font-size:1.25rem;color:#cbd5e1;line-height:1}
+.star[aria-pressed=true]{color:var(--orange)}
+.acts{display:flex;gap:6px;justify-content:flex-end}
+.empty{padding:50px;text-align:center;color:var(--muted)}
+/* Editor */
+.ed{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:22px;align-items:start}
+.ed .col{display:flex;flex-direction:column;gap:18px}
+.sec h3{font-size:1.08rem;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.sec h3 .n{width:24px;height:24px;border-radius:7px;background:var(--navy);color:#fff;font-size:.8rem;display:grid;place-items:center}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.seg{display:inline-flex;background:#eef2f8;border-radius:11px;padding:4px;gap:4px}
+.seg button{border:0;background:none;padding:8px 16px;border-radius:8px;font-weight:700;color:var(--muted);cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--navy);color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips label{display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--line);border-radius:99px;padding:6px 13px;font-weight:600;font-size:.88rem;cursor:pointer;user-select:none}
+.chips input{accent-color:var(--orange)}
+.chips label:has(input:checked){border-color:var(--orange);background:#fff4ec;color:#c2410c}
+.quick{background:linear-gradient(140deg,#fff7f1,#fff);border:1.5px dashed #f7b48a}
+.drop{border:2px dashed #c9d3e2;border-radius:14px;padding:22px;text-align:center;color:var(--muted);cursor:pointer;transition:.15s}
+.drop.over{border-color:var(--orange);background:#fff4ec}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px}
+.ph{position:relative;border-radius:11px;overflow:hidden;aspect-ratio:4/3;background:#e8edf5;cursor:grab}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph .cover{position:absolute;left:6px;top:6px;background:var(--orange);color:#fff;font-size:.68rem;font-weight:800;padding:2px 7px;border-radius:6px}
+.ph .tools{position:absolute;right:5px;bottom:5px;display:flex;gap:4px}
+.ph .tools button{width:26px;height:26px;border-radius:7px;border:0;background:rgba(255,255,255,.94);cursor:pointer;font-weight:800;font-size:.85rem}
+.ph .bar{position:absolute;left:0;bottom:0;height:4px;background:var(--orange);transition:width .2s}
+.ph.dragging{opacity:.4}
+.side-sticky{position:sticky;top:20px;display:flex;flex-direction:column;gap:16px}
+.pv{border-radius:18px;overflow:hidden;background:#fff;border:1px solid var(--line);box-shadow:0 16px 40px -24px rgba(11,31,58,.35)}
+.pv .pic{aspect-ratio:4/3;background:linear-gradient(135deg,var(--navy-3),#f6b382);position:relative}
+.pv .pic img{width:100%;height:100%;object-fit:cover;display:block}
+.pv .badge{position:absolute;left:12px;top:12px;background:#fff;color:var(--navy);font-weight:800;font-size:.76rem;padding:4px 10px;border-radius:99px}
+.pv .badge.kiralik{background:var(--navy);color:#fff}
+.pv .body{padding:16px}
+.pv .p{font-family:Outfit;font-size:1.35rem;font-weight:800;color:var(--orange)}
+.pv h4{font-size:1.02rem;margin:4px 0}
+.pv .loc{color:var(--muted);font-size:.86rem;font-weight:600}
+.pv .specs{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.pv .specs span{background:#eef2f8;border-radius:8px;padding:3px 9px;font-size:.8rem;font-weight:700}
+.checks{display:flex;flex-direction:column;gap:8px;font-size:.88rem}
+.checks div{display:flex;gap:8px;align-items:flex-start}
+.checks .w{color:#b45309}.checks .g{color:#15803d}.checks .f{color:#1e40af}
+.savebar{display:flex;gap:10px;flex-wrap:wrap}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:12px 18px;border-radius:12px;font-weight:700;opacity:0;transition:.25s;z-index:99;pointer-events:none;max-width:90vw}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.toast.err{background:var(--err)}
+.list-mini{display:flex;flex-direction:column}
+.list-mini a{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;font-weight:600}
+.list-mini a:last-child{border-bottom:0}
+.list-mini small{color:var(--muted)}
+.bars{display:flex;flex-direction:column;gap:9px}
+.bars div{display:grid;grid-template-columns:90px 1fr 30px;gap:10px;align-items:center;font-size:.88rem;font-weight:600}
+.bars i{display:block;height:9px;border-radius:9px;background:linear-gradient(90deg,var(--orange),var(--orange-2))}
+.role{font-size:.72rem;font-weight:800;padding:2px 8px;border-radius:6px;background:rgba(242,106,33,.2);color:var(--orange-2)}
+.setup{max-width:640px;margin:10vh auto;padding:30px}
+@media (max-width:1100px){.ed{grid-template-columns:1fr}.side-sticky{position:static}.stats{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:820px){
+  #auth{grid-template-columns:1fr}#auth .side{padding:28px;min-height:auto}#auth .side h1{font-size:1.7rem}
+  #app{grid-template-columns:1fr}
+  .sb{position:fixed;bottom:0;top:auto;height:auto;width:100%;flex-direction:row;z-index:20;padding:6px;justify-content:space-around;gap:0}
+  .sb .brand,.sb .me{display:none}
+  .nav{flex-direction:column;gap:2px;font-size:.68rem;padding:7px 4px;text-align:center}
+  .nav[aria-current=page]{box-shadow:inset 0 3px 0 var(--orange)}
+  main{padding:18px 14px 90px}
+  .grid2,.grid3{grid-template-columns:1fr 1fr}
+  .tbl .hide-m{display:none}
+}
+</style>
+</head>
+<body>
+
+<div id="setup" class="setup card hidden" style="text-align:center">
+  <img src="logo.png" alt="" style="width:56px;background:var(--navy);padding:12px;border-radius:14px">
+  <h2 style="margin-top:16px">Yönetim paneli kuruluyor</h2>
+  <p style="color:var(--muted)">Panel adresi hazır; veritabanı bağlantısı tamamlanınca bu sayfada giriş ekranı açılacak.</p>
+  <a class="btn btn-soft" href="/">← Siteye dön</a>
+</div>
+
+<!-- ===== Giriş ===== -->
+<section id="auth" class="hidden">
+  <div class="side">
+    <div><img src="logo.png" alt="3M Yapı">
+      <h1>3M Yapı Gayrimenkul yönetim paneli</h1>
+      <p>İlanları ekleyin, güncelleyin, fotoğraf yükleyin. Yaptığınız her değişiklik ucgulgroup.com'da anında görünür.</p></div>
+    <p style="font-size:.82rem;color:#8ea3c2">Bir Üçgül Group şirketidir · Yalnızca yetkili personel içindir.</p>
+  </div>
+  <div class="form-wrap">
+    <form id="authForm" novalidate>
+      <h2 id="authTitle">Giriş yapın</h2>
+      <div class="tabs" role="tablist" id="authTabs">
+        <button type="button" role="tab" data-m="login" aria-selected="true">Giriş</button>
+        <button type="button" role="tab" data-m="signup" aria-selected="false">Hesap oluştur</button>
+      </div>
+      <p id="authLead" class="hidden" style="margin:0;color:var(--muted);font-size:.9rem">Yöneticinizin sizi davet ettiği e-posta adresiyle hesap oluşturun.</p>
+      <div id="fName" class="hidden"><label class="label" for="aName">Ad soyad</label><input class="inp" id="aName" autocomplete="name"></div>
+      <div id="fEmail"><label class="label" for="aEmail">E-posta</label><input class="inp" id="aEmail" type="email" autocomplete="email" required></div>
+      <div id="fPass"><label class="label" for="aPass">Şifre</label><input class="inp" id="aPass" type="password" autocomplete="current-password" minlength="8" required>
+        <div class="hint" id="passHint"></div></div>
+      <div id="authMsg" class="msg hidden" role="status"></div>
+      <button class="btn btn-cta" id="authBtn" type="submit">Giriş yap</button>
+      <button type="button" class="linkbtn" id="forgot">Şifremi unuttum</button>
+    </form>
+  </div>
+</section>
+
+<!-- ===== Uygulama ===== -->
+<div id="app" class="hidden">
+  <aside class="sb">
+    <a class="brand" href="#ozet"><img src="logo.png" alt=""><span><b>3M Yapı</b><small>YÖNETİM PANELİ</small></span></a>
+    <a class="nav" href="#ozet" data-v="ozet"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg>Genel bakış</a>
+    <a class="nav" href="#ilanlar" data-v="ilanlar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>İlanlar</a>
+    <a class="nav" href="#yeni" data-v="yeni"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>Yeni ilan</a>
+    <a class="nav admin-only" href="#personel" data-v="personel"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/></svg>Personel</a>
+    <a class="nav" href="#hesap" data-v="hesap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Hesabım</a>
+    <a class="nav" href="/" target="_blank" rel="noopener"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>Siteyi gör</a>
+    <div class="me"><b id="meName"></b><span id="meRole" class="role"></span><br><button class="linkbtn" id="logout" style="margin-top:8px">Çıkış yap</button></div>
+  </aside>
+  <main id="main"></main>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ===== Akıllı düzeltme: ne yazılırsa yazılsın uygun biçime getirir ===== */
+const NORM = (() => {
+  const ILCELER = ["İpekyolu","Tuşba","Edremit","Erciş","Gevaş","Muradiye","Özalp","Başkale","Çaldıran","Gürpınar","Saray","Çatak","Bahçesaray"];
+  const TYPES = ["Daire","Villa","Konak","Müstakil","Dükkan","Arsa"];
+  const FEATURES = ["Göl manzarası","Asansör","Otopark","Site içinde","Eşyalı","Balkon","Bahçe","Güvenlik","Krediye uygun","Takasa uygun","Tapulu","İmarlı","Yola cepheli","Asfalt yol","Elektrik","Su"];
+  const trLower = s => s.toLocaleLowerCase("tr-TR");
+  const trUpper = s => s.toLocaleUpperCase("tr-TR");
+  const fold = s => trLower(String(s||"")).normalize("NFD").replace(/[̀-ͯ]/g,"")
+    .replace(/ı/g,"i").replace(/ş/g,"s").replace(/ğ/g,"g").replace(/ü/g,"u").replace(/ö/g,"o").replace(/ç/g,"c").replace(/[^a-z0-9+ ]/g," ").replace(/\s+/g," ").trim();
+  const clean = s => String(s??"").replace(/[​ ]/g," ").replace(/[ \t]+/g," ").replace(/\s*\n\s*\n\s*/g,"\n\n").trim();
+
+  // Levenshtein (yazım hatalarına tolerans)
+  const lev = (a,b) => { const m=a.length,n=b.length,d=Array.from({length:m+1},(_,i)=>[i,...Array(n).fill(0)]);
+    for(let j=1;j<=n;j++) d[0][j]=j;
+    for(let i=1;i<=m;i++) for(let j=1;j<=n;j++) d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
+    return d[m][n]; };
+  const best = (val, list, tol=2) => { const f=fold(val); if(!f) return null;
+    let hit=list.find(x=>fold(x)===f); if(hit) return hit;
+    hit=list.find(x=>f.includes(fold(x))); if(hit) return hit;
+    let bd=99,bx=null; for(const x of list){ const d=lev(f,fold(x)); if(d<bd){bd=d;bx=x;} } return bd<=tol?bx:null; };
+
+  // Başlık: TAMAMI BÜYÜK / tamamı küçük yazıldıysa düzgün büyük harf
+  const SMALL = new Set(["ve","ile","de","da","ya","veya","için","en","bir"]);
+  function title(s){
+    s = clean(s).replace(/\n/g," ").replace(/([!?.])\1+/g,"$1").replace(/\s*([,;:])\s*/g,"$1 ").replace(/\s+([.!?])/g,"$1");
+    s = s.replace(/(\d)\s*\+\s*(\d)/g,"$1+$2").replace(/(\d)\s*(m2|m²|metrekare|mt2)\b/gi,"$1 m²");
+    const letters = s.replace(/[^A-Za-zÇĞİÖŞÜçğıöşü]/g,"");
+    const upper = letters && letters === trUpper(letters), lower = letters && letters === trLower(letters);
+    if(upper || lower){
+      s = trLower(s).split(" ").map((w,i)=> (i>0 && SMALL.has(w)) ? w : w.replace(/^\p{L}/u, c=>trUpper(c))).join(" ");
+    } else s = s.replace(/^\p{L}/u, c=>trUpper(c));
+    s = s.replace(/\bm²/gi,"m²");
+    return s.length>120 ? s.slice(0,117).trim()+"…" : s;
+  }
+
+  // Fiyat: "4.350.000 TL", "4,35 milyon", "4.35m", "13 bin", "13.500₺", "₺ 9 750 000"
+  function price(v){
+    if(typeof v==="number") return Math.round(v);
+    let s = trLower(String(v||"")).replace(/tl|try|₺|lira|türk/g,"").replace(/\s+/g," ").trim();
+    if(!s) return null;
+    let mult=1;
+    if(/milyon|\bmn\b|\bm\b|(\d)m$/.test(s)) mult=1e6; else if(/\bbin\b|\bk\b|(\d)k$/.test(s)) mult=1e3;
+    let num = (s.match(/\d[\d.,\s]*/)||[""])[0].replace(/\s/g,"").replace(/[.,]+$/,"");
+    if(!num) return null;
+    if(mult>1){ num=num.replace(/\.(?=\d{3}(\D|$))/g,"").replace(",","."); }
+    else {
+      const dots=(num.match(/\./g)||[]).length, commas=(num.match(/,/g)||[]).length;
+      if(dots>1 || (dots===1 && /\.\d{3}$/.test(num) && !commas)) num=num.replace(/\./g,"").replace(",",".");
+      else if(commas>1 || (commas===1 && /,\d{3}$/.test(num) && !dots)) num=num.replace(/,/g,"");
+      else num=num.replace(/\./g,"").replace(",",".");
+    }
+    const n=parseFloat(num)*mult; return isFinite(n)&&n>0?Math.round(n):null;
+  }
+  const int = (v, def=0) => { if(typeof v==="number") return Math.round(v); const m=String(v||"").replace(/\./g,"").match(/\d+/); return m?+m[0]:def; };
+
+  // Oda: "3+1", "3 + 1", "üç artı bir", "stüdyo"
+  const WORDN={bir:1,iki:2,uc:3,dort:4,bes:5,alti:6,yedi:7};
+  function rooms(v){
+    const f=fold(v); if(!f) return null;
+    if(/studyo|1\+0/.test(f)) return {rooms:1,salon:0};
+    let m=f.match(/(\d+)\s*\+\s*(\d+)/); if(m) return {rooms:+m[1],salon:+m[2]};
+    m=f.match(/(bir|iki|uc|dort|bes|alti|yedi) arti (bir|iki)/); if(m) return {rooms:WORDN[m[1]],salon:WORDN[m[2]]};
+    m=f.match(/^(\d+)$/); if(m) return {rooms:+m[1],salon:1};
+    return null;
+  }
+  // Tür eş anlamlıları
+  const TYPE_SYN = [[/villa/,"Villa"],[/konak/,"Konak"],[/mustakil|bahceli ev|kerpic|tek katli ev|iki katli ev/,"Müstakil"],
+    [/dukkan|isyeri|is yeri|magaza|ofis|buro|depo|ticari/,"Dukkan"],[/arsa|tarla|bag|bahce arazi|arazi|parsel|imarli/,"Arsa"],
+    [/daire|apartman|rezidans|dubleks|residence|studyo|\d\+\d/,"Daire"]];
+  function type(v){ const f=fold(v); if(!f) return null; const t=best(v,TYPES,1); if(t) return t;
+    for(const [re,t2] of TYPE_SYN) if(re.test(f)) return t2==="Dukkan"?"Dükkan":t2; return null; }
+  function deal(v){ const f=fold(v); if(/kira/.test(f)) return "kiralik"; if(/sat/.test(f)) return "satilik"; return null; }
+  const ilce = v => best(v, ILCELER, 2);
+  function mahalle(v){ let s=clean(v).replace(/\b(mahallesi|mahalle|mah\.?|mh\.?)\s*$/i,"").trim(); return s?title(s).replace(/ Mah$/,""):""; }
+  function floor(v){ let s=clean(v); if(!s) return ""; const f=fold(s);
+    if(/zemin|giris/.test(f)) return "Zemin"; if(/bahce kati/.test(f)) return "Bahçe katı"; if(/mustakil/.test(f)) return "Müstakil";
+    if(/cati|teras/.test(f)) return "Çatı katı";
+    const m=f.match(/(\d+)\D+(\d+)/); if(m) return `${m[1]} / ${m[2]}`;
+    const k=f.match(/^(\d+)/); if(k) return `${k[1]}. kat`; return title(s); }
+  const HEAT=[[/kombi|dogalgaz|dogal gaz/,"Doğalgaz kombi"],[/merkezi/,"Merkezi"],[/yerden/,"Yerden ısıtma"],[/klima/,"Klima"],[/soba/,"Soba"],[/kat kalorifer/,"Kat kaloriferi"],[/yok/,"Yok"]];
+  function heat(v){ const f=fold(v); if(!f) return ""; const hits=HEAT.filter(([re])=>re.test(f)).map(h=>h[1]); return hits.length?[...new Set(hits)].join(" + "):title(v); }
+  function age(v){ if(v==null||String(v).trim()==="") return null; const f=fold(v); if(/sifir|yeni bina|0 yas/.test(f)) return 0; const n=int(v,null); if(n==null) return null; if(n>1900&&n<=2100) return Math.max(0,new Date().getFullYear()-n); return Math.min(n,150); }
+  function features(v){ const f=fold(Array.isArray(v)?v.join(" "):v); return FEATURES.filter(x=>f.includes(fold(x)) || (x==="Göl manzarası"&&/gol manzar|deniz manzar/.test(f)) || (x==="Eşyalı"&&/esyali/.test(f)) || (x==="Otopark"&&/otopark|garaj/.test(f)) || (x==="Site içinde"&&/site icer|site ici/.test(f)) || (x==="Asansör"&&/asansor/.test(f)) || (x==="Krediye uygun"&&/krediye uygun/.test(f))); }
+  const KEEP=new Set(["TL","3M","WC","AVM","TOKİ","PVC","LED","SSK","İSKİ"]);
+  function description(v){ return clean(v).split("\n").map(ln=>{
+      ln=ln.replace(/[A-ZÇĞİÖŞÜ]{3,}/g,w=>KEEP.has(w)?w:trLower(w));
+      return ln.replace(/^\s*\p{L}/u,c=>trUpper(c)).replace(/(\D[.!?]\s+)(\p{Ll})/gu,(m,a,b)=>a+trUpper(b));
+    }).join("\n").replace(/[ \t]*\n[ \t]*/g,"\n").replace(/!{2,}/g,"!").slice(0,4000); }
+
+  // Serbest metinden (ör. başka siteden kopyalanan ilan) alanları çıkar
+  function parseFree(text){
+    const t=String(text||""), f=fold(t), out={}, lines=t.split(/\n/).map(x=>x.trim()).filter(Boolean);
+    const field = (...keys) => { for(const k of keys){ for(const ln of lines){ const fl=fold(ln); if(fl.startsWith(k)){ const rest=ln.slice(ln.search(/[:\t]/)+1||k.length).trim(); if(rest) return rest; } } } return null; };
+    out.deal = deal(field("emlak tipi","ilan tipi") || t);
+    out.type = type(field("emlak tipi","konut tipi","tur") || t);
+    const tNoM2 = t.replace(/\d[\d.,]*\s*(m2|m²|metrekare|mt2)/gi," ").replace(/\d\s*\+\s*\d/g," ").replace(/\d+\s*\.?\s*kat\s*(\/\s*\d+)?/gi," ");
+    const p = field("fiyat") || (tNoM2.match(/\d[\d.,]*(\s\d{3})*\s*(tl|₺|milyon|mn|bin)\b/i)||tNoM2.match(/\d[\d.,]*(\s\d{3})*\s*₺/)||[""])[0];
+    out.price = price(p);
+    if(!out.price){ const big=(tNoM2.match(/\b\d{1,3}(?:[.\s]\d{3})+\b|\b\d{5,}\b/)||[])[0]; if(big) out.price=price(big); }
+    const r = rooms(field("oda sayisi","oda") || (t.match(/\d\s*\+\s*\d/)||[""])[0]); if(r) Object.assign(out,r);
+    const m2 = field("m2 net","m net","net m2","net m","m2 brut","m brut","brut m2","m2","metrekare") || (t.match(/(\d[\d.]*)\s*(m2|m²|metrekare)/i)||[])[1];
+    if(m2) out.m2 = int(m2);
+    const a=field("bina yasi"); if(a!=null) out.age=age(a);
+    const fl=field("bulundugu kat"); const tot=field("kat sayisi");
+    if(fl) out.floor = floor(tot?`${fl} / ${tot}`:fl);
+    else { const km=f.match(/(\d+)\s*kat\s*(\d+)\b/)||f.match(/(\d+)\s*kat\b/)||f.match(/\b(zemin|bahce kati|cati kati)\b/); if(km) out.floor = km[2]?`${km[1]} / ${km[2]}`:floor(km[1]); }
+    const h=field("isitma","isinma"); if(h) out.heat=heat(h); else if(/kombi|dogalgaz|merkezi|yerden|soba|kalorifer/.test(f)) out.heat=heat(t);
+    const b=field("banyo sayisi","banyo"); if(b) out.bath=int(b);
+    const il=ILCELER.find(x=>f.includes(fold(x))); if(il) out.loc=il;
+    const mh=t.match(/([A-ZÇĞİÖŞÜa-zçğıöşü0-9 .]+?)\s+(mahallesi|mah\.?|mh\.?)(?=[\s,./]|$)/i); if(mh){ const w=mh[1].trim().split(/[\s,/]+/).filter(x=>!ILCELER.some(i=>fold(i)===fold(x))&&!/^van$/i.test(x)); if(w.length) out.mahalle=mahalle(w.slice(-2).join(" ")); }
+    out.features = features(t);
+    let firstReal = lines.find(l=>l.length>=12 && !/[:\t]/.test(l) && !/^\d/.test(l));
+    if(firstReal && (firstReal.length>80 || /\b(mah|mahallesi|mh)\b|tl\b|₺|milyon|\bbin\b|m2|m²|\d{1,3}[.\s]\d{3}|\d{5,}/i.test(firstReal))) firstReal=null;
+    if(firstReal) out.title = title(firstReal);
+    else out.title = autoTitle(out, f);
+    const desc = lines.filter(l=>l.length>40 && !/[:\t]/.test(l) && l!==firstReal).join("\n");
+    if(desc) out.description = description(desc);
+    Object.keys(out).forEach(k=>{ if(out[k]==null || (Array.isArray(out[k])&&!out[k].length)) delete out[k]; });
+    return out;
+  }
+
+  // Türkçe bulunma eki: Tuşba'da, Gevaş'ta, Edremit'te, Şabaniye'de
+  function loc(w){ const l=trLower(w), v=(l.match(/[aeıioöuü](?=[^aeıioöuü]*$)/)||["e"])[0];
+    const back="aıou".includes(v), hard=/[fstkçşhp]$/.test(l);
+    return `${w}'${hard?"t":"d"}${back?"a":"e"}`; }
+  function autoTitle(o, f=""){
+    const parts=[];
+    if(/gol manzar/.test(f)) parts.push("göl manzaralı");
+    if(/asansor/.test(f)) parts.push("asansörlü");
+    if(/esyali/.test(f)) parts.push("eşyalı");
+    const r=o.type!=="Arsa"&&o.rooms?`${o.rooms}+${o.salon??1}`:"";
+    const where=o.mahalle||o.loc||"";
+    let t=`${where?loc(where)+" ":""}${parts.join(", ")} ${o.deal==="kiralik"?"kiralık":"satılık"} ${r} ${o.type?trLower(o.type):""}`.replace(/\s+/g," ").trim();
+    t=t.replace(/^\p{L}/u,c=>trUpper(c)); if(o.type==="Arsa"&&o.m2) t+=` (${o.m2.toLocaleString("tr-TR")} m²)`;
+    return t;
+  }
+  // Tüm ilanı son kez düzenle + uyarılar üret
+  function listing(l){
+    const w=[]; const o={...l};
+    o.title=title(o.title); o.loc=ilce(o.loc)||o.loc; o.mahalle=mahalle(o.mahalle||"");
+    o.type=type(o.type)||o.type; o.deal=deal(o.deal)||o.deal;
+    o.price=price(o.price); o.m2=int(o.m2); o.bath=int(o.bath); o.age=typeof o.age==="number"?o.age:age(o.age);
+    o.floor=floor(o.floor); o.heat=heat(o.heat); o.description=description(o.description);
+    if(o.type==="Arsa"){ o.rooms=0; o.salon=0; o.bath=0; o.age=null; o.floor=""; o.heat=""; }
+    if(!o.title||o.title.length<3) w.push("Başlık çok kısa.");
+    if(!ILCELER.includes(o.loc)) w.push("İlçe tanınmadı; listeden seçin.");
+    if(!o.price) w.push("Fiyat okunamadı.");
+    if(!o.m2) w.push("Metrekare girilmedi.");
+    if(o.price&&o.m2&&o.deal==="satilik"&&o.type!=="Arsa"){ const pm=o.price/o.m2; if(pm<3000||pm>200000) w.push(`m² fiyatı (${Math.round(pm).toLocaleString("tr-TR")} ₺) olağan dışı; fiyatı veya m²'yi kontrol edin.`); }
+    if(o.price&&o.deal==="kiralik"&&o.price>500000) w.push("Kiralık için fiyat çok yüksek; aylık kira mı girildi?");
+    if(o.price&&o.deal==="satilik"&&o.price<100000) w.push("Satılık için fiyat çok düşük; 'bin' veya 'milyon' unutulmuş olabilir.");
+    return {value:o, warnings:w};
+  }
+  return {ILCELER,TYPES,FEATURES,autoTitle,loc,title,price,rooms,type,deal,ilce,mahalle,floor,heat,age,features,description,parseFree,listing,fold,int};
+})();
+if(typeof module!=="undefined") module.exports=NORM;
+
+const MAH = {"İpekyolu":["Alipaşa","Bahçıvan","Bakraçlı","Bostaniçi","Buzhane","Cevdet Paşa","Cumhuriyet","Esenler","Gündoğdu","Hacıbekir","Hafiziye","Halilağa","Hatuniye","Karagündüz","Karpuzalanı","Karşıyaka","Kavuncu","Kevenli","Kıratlı","Selimbey","Serhat","Seyit Fehim Arvasi","Vali Mithat Bey","Yalı","Yeni","Şafak","Şerefiye"],"Tuşba":["Abdurrahman Gazi","Akköprü","Alabayır","Alaköy","Altıntepe","Ayanıs","Aşıt","Bardakçı","Beyüzümü","Dağönü","Gölyazı","Halkalı","Kalecik","Mollakasım","Seyrantepe","Topaktaş","Yaylıyaka","Yeşilköy","Yeşilsu","Yumrutepe","Çakırbey","Çitören","Çolpan","Özyurt","İskele","İstasyon","Şemsibey","Şemsibeyosb"],"Edremit":["Akın","Andaç","Ayazpınar","Bakacık","Bakımlı","Doğanlar","Elmalık","Eminpaşa","Erdemkent","Erenkent","Esentepe","Eski Cami","Kavurma","Kurubaş","Köprüler","Kıyıcak","Mülk","Selahattin Eyyubi","Süphan","Yeni","Yeni Cami","Şabaniye"],"Erciş":["Adnan Menderes","Alkanat","Ağırkaya","Bayramlı","Beyazıt","Camiikebir","Görüşlü","Haydarbey","Kışla","Latifiye","Sahil Kent","Salihiye","Tekevler","Tekler","Vanyolu","Yeşilova","Çelebibağı","Çınarlı","Örene"],"Gevaş":["Atalan","Bahçelievler","Dokuzağaç","Elmalı","Hişet","Karşıyaka","Orta","Pınarbaşı","Selimiye","Uysal"],"Muradiye":["Kandahar","Karaoğlan","Yavuzselim","Yenişehir","Şehitmehmetbey"],"Başkale":[],"Çaldıran":[],"Özalp":[],"Gürpınar":[],"Saray":[],"Bahçesaray":[],"Çatak":[]};
+</script>
+<script type="module">
+const SB_URL = "__SB_URL__", SB_KEY = "__SB_KEY__";
+const BUCKET = "ilanlar";
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt = n => new Intl.NumberFormat("tr-TR").format(n||0);
+const STATUS = {yayinda:"Yayında", opsiyonlu:"Opsiyonlu", taslak:"Taslak", satildi:"Satıldı / Kiralandı", pasif:"Pasif"};
+const stLabel = (s,deal) => s==="satildi" ? (deal==="kiralik"?"Kiralandı":"Satıldı") : STATUS[s];
+const ago = d => { const s=(Date.now()-new Date(d))/1000; if(s<60) return "az önce"; if(s<3600) return Math.floor(s/60)+" dk önce"; if(s<86400) return Math.floor(s/3600)+" sa önce"; if(s<86400*30) return Math.floor(s/86400)+" gün önce"; return new Date(d).toLocaleDateString("tr-TR"); };
+function toast(t, err){ const el=$("toast"); el.textContent=t; el.className="toast show"+(err?" err":""); clearTimeout(toast.t); toast.t=setTimeout(()=>el.className="toast",3200); }
+const roomText = l => l.type==="Arsa" ? "" : l.type==="Dükkan" ? "" : `${l.rooms}+${l.salon??1}`;
+
+let sb, me = null, profile = null, LIST = [], STAFF = [];
+
+if (window.__SB_MOCK) sb = window.__SB_MOCK;
+else if (SB_URL.startsWith("__")) { $("setup").classList.remove("hidden"); throw new Error("setup"); }
+else { const { createClient } = await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm"); sb = createClient(SB_URL, SB_KEY); }
+
+/* ================= Giriş ================= */
+let authMode = "login";
+function setAuthMode(m){
+  authMode = m;
+  document.querySelectorAll("#authTabs button").forEach(b=>b.setAttribute("aria-selected", b.dataset.m===m));
+  $("authTabs").classList.toggle("hidden", m==="reset"||m==="newpass");
+  $("fName").classList.toggle("hidden", m!=="signup");
+  $("authLead").classList.toggle("hidden", m!=="signup");
+  $("fEmail").classList.toggle("hidden", m==="newpass");
+  $("fPass").classList.toggle("hidden", m==="reset");
+  $("forgot").classList.toggle("hidden", m!=="login");
+  $("aPass").autocomplete = m==="login" ? "current-password" : "new-password";
+  $("authTitle").textContent = {login:"Giriş yapın", signup:"Hesap oluşturun", reset:"Şifre sıfırlama", newpass:"Yeni şifre belirleyin"}[m];
+  $("authBtn").textContent = {login:"Giriş yap", signup:"Hesap oluştur", reset:"Sıfırlama bağlantısı gönder", newpass:"Şifreyi kaydet"}[m];
+  $("passHint").textContent = m==="login" ? "" : "En az 8 karakter; harf ve rakam içersin.";
+  authMsg();
+}
+function authMsg(t, kind="err"){ const m=$("authMsg"); if(!t){ m.classList.add("hidden"); return; } m.className="msg "+kind; m.textContent=t; }
+$("authTabs").addEventListener("click", e=>{ const b=e.target.closest("[data-m]"); if(b) setAuthMode(b.dataset.m); });
+$("forgot").addEventListener("click", ()=>setAuthMode("reset"));
+const ERR = e => { const m=(e&&e.message)||String(e);
+  if(/invalid login/i.test(m)) return "E-posta veya şifre hatalı.";
+  if(/email not confirmed/i.test(m)) return "E-postanızı henüz onaylamadınız. Gelen kutunuzdaki bağlantıya tıklayın.";
+  if(/already registered|already been registered/i.test(m)) return "Bu e-posta ile zaten hesap var. Giriş yapın.";
+  if(/rate limit|too many/i.test(m)) return "Çok fazla deneme yapıldı. Birkaç dakika sonra tekrar deneyin.";
+  if(/password/i.test(m) && /least|short|weak/i.test(m)) return "Şifre çok zayıf. En az 8 karakter, harf ve rakam kullanın.";
+  if(/row-level security|permission|not allowed/i.test(m)) return "Bu işlem için yetkiniz yok.";
+  return m; };
+$("authForm").addEventListener("submit", async e=>{
+  e.preventDefault();
+  const email=$("aEmail").value.trim().toLowerCase(), pass=$("aPass").value;
+  if(authMode!=="newpass" && !/^\S+@\S+\.\S+$/.test(email)) return authMsg("Geçerli bir e-posta yazın.");
+  if((authMode==="signup"||authMode==="newpass") && (pass.length<8 || !/\d/.test(pass) || !/\p{L}/u.test(pass))) return authMsg("Şifre en az 8 karakter olmalı ve harf ile rakam içermeli.");
+  const btn=$("authBtn"); btn.disabled=true;
+  try{
+    if(authMode==="login"){ const {error}=await sb.auth.signInWithPassword({email,password:pass}); if(error) throw error; $("aPass").value=""; btn.disabled=false; return boot(); }
+    else if(authMode==="signup"){
+      const {data,error}=await sb.auth.signUp({email,password:pass,options:{emailRedirectTo:location.origin+location.pathname, data:{full_name:NORM.title($("aName").value)}}});
+      if(error) throw error;
+      if(!data.session){ authMsg("Hesabınız oluşturuldu. E-postanıza gelen onay bağlantısına tıklayın, sonra buradan giriş yapın.","ok"); }
+      else { btn.disabled=false; return boot(); }
+    }
+    else if(authMode==="reset"){ const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname}); if(error) throw error; authMsg("Sıfırlama bağlantısı e-postanıza gönderildi.","ok"); }
+    else if(authMode==="newpass"){ const {error}=await sb.auth.updateUser({password:pass}); if(error) throw error; toast("Şifreniz güncellendi."); recovering=false; history.replaceState(null,"",location.pathname); boot(); }
+  }catch(err){ authMsg(ERR(err)); }
+  btn.disabled=false;
+});
+let recovering=false;
+sb.auth.onAuthStateChange((ev)=>{ if(ev==="PASSWORD_RECOVERY"){ recovering=true; show("auth"); setAuthMode("newpass"); } });
+
+function show(which){ ["auth","app","setup"].forEach(x=>$(x).classList.toggle("hidden", x!==which)); }
+
+async function boot(){
+  const {data:{session}} = await sb.auth.getSession();
+  if(recovering || !session){ show("auth"); setAuthMode(recovering?"newpass":"login"); return; }
+  me = session.user;
+  let {data:p} = await sb.from("profiles").select("*").eq("id", me.id).maybeSingle();
+  if(!p){ const {data:ok}=await sb.rpc("claim_invite"); if(ok){ ({data:p} = await sb.from("profiles").select("*").eq("id", me.id).maybeSingle()); } }
+  if(!p || !p.active){
+    show("auth"); setAuthMode("login");
+    authMsg(!p ? `${me.email} hesabı henüz yetkilendirilmedi. Yöneticinizden bu e-posta için personel daveti isteyin, sonra tekrar giriş yapın.` : "Hesabınız pasif durumda. Yöneticinizle görüşün.","info");
+    await sb.auth.signOut(); return;
+  }
+  profile = p;
+  if(!p.full_name && me.user_metadata?.full_name){ await sb.from("profiles").update({full_name:me.user_metadata.full_name}).eq("id",me.id); p.full_name=me.user_metadata.full_name; }
+  $("meName").textContent = p.full_name || p.email;
+  $("meRole").textContent = p.role==="admin" ? "YÖNETİCİ" : "DANIŞMAN";
+  document.querySelectorAll(".admin-only").forEach(x=>x.classList.toggle("hidden", p.role!=="admin"));
+  show("app");
+  await Promise.all([loadList(), loadStaff()]);
+  route();
+}
+$("logout").addEventListener("click", async ()=>{ await sb.auth.signOut(); location.hash=""; boot(); });
+
+/* ================= Veri ================= */
+async function loadList(){
+  const {data,error} = await sb.from("listings").select("*").order("updated_at",{ascending:false});
+  if(error){ toast(ERR(error),true); return; }
+  LIST = data || [];
+}
+async function loadStaff(){
+  const {data} = await sb.from("profiles").select("*").order("created_at");
+  STAFF = data || [];
+}
+const staffName = id => { const s=STAFF.find(x=>x.id===id); return s ? (s.full_name||s.email) : "—"; };
+const isAdmin = () => profile?.role==="admin";
+
+/* ================= Yönlendirme ================= */
+window.addEventListener("hashchange", route);
+function route(){
+  if($("app").classList.contains("hidden")) return;
+  const [v,arg] = (location.hash.slice(1)||"ozet").split("/");
+  document.querySelectorAll(".nav[data-v]").forEach(n=>n.setAttribute("aria-current", n.dataset.v===v || (v==="duzenle"&&n.dataset.v==="ilanlar") ? "page" : "false"));
+  window.scrollTo(0,0);
+  if(v==="ilanlar") return viewList();
+  if(v==="yeni") return viewEditor(null);
+  if(v==="duzenle") return viewEditor(+arg);
+  if(v==="personel" && isAdmin()) return viewStaff();
+  if(v==="hesap") return viewAccount();
+  return viewHome();
+}
+
+/* ================= Genel bakış ================= */
+function viewHome(){
+  const c = s => LIST.filter(l=>l.status===s).length;
+  const byLoc = {}; LIST.filter(l=>l.status==="yayinda"||l.status==="opsiyonlu").forEach(l=>byLoc[l.loc]=(byLoc[l.loc]||0)+1);
+  const maxL = Math.max(1,...Object.values(byLoc));
+  const hour = new Date().getHours(), hi = hour<12?"Günaydın":hour<18?"İyi günler":"İyi akşamlar";
+  $("main").innerHTML = `
+    <div class="top"><div><h1>${hi}, ${esc((profile.full_name||"").split(" ")[0]||"hoş geldiniz")}</h1><p>Portföyünüzün bugünkü durumu.</p></div>
+      <a class="btn btn-cta" href="#yeni">+ Yeni ilan ekle</a></div>
+    <div class="stats">
+      <div class="stat hl"><b>${c("yayinda")+c("opsiyonlu")}</b><span>Sitede yayında</span></div>
+      <div class="stat"><b>${c("taslak")}</b><span>Taslak</span></div>
+      <div class="stat"><b>${c("satildi")}</b><span>Satıldı / kiralandı</span></div>
+      <div class="stat"><b>${LIST.length}</b><span>Toplam kayıt</span></div>
+    </div>
+    <div class="grid2" style="align-items:start">
+      <div class="card"><h3 style="margin-bottom:12px">Son güncellenenler</h3><div class="list-mini">${
+        LIST.slice(0,7).map(l=>`<a href="#duzenle/${l.id}"><span>${esc(l.title)}<br><small>${esc(l.loc)} · ${stLabel(l.status,l.deal)} · ${staffName(l.updated_by||l.created_by)}</small></span><small>${ago(l.updated_at)}</small></a>`).join("") || `<p class="empty">Henüz ilan yok.</p>`}</div></div>
+      <div class="card"><h3 style="margin-bottom:14px">Yayındaki ilanlar · ilçeye göre</h3><div class="bars">${
+        Object.entries(byLoc).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div><span>${esc(k)}</span><i style="width:${v/maxL*100}%"></i><b>${v}</b></div>`).join("") || `<p class="empty">Yayında ilan yok.</p>`}</div>
+        ${c("taslak")?`<p style="margin:18px 0 0;font-size:.9rem;color:var(--muted)">${c("taslak")} ilan taslakta bekliyor. <a href="#ilanlar">Gözden geçirin →</a></p>`:""}</div>
+    </div>`;
+}
+
+/* ================= İlan listesi ================= */
+let F = {q:"", st:"", deal:"", loc:"", sort:"upd"};
+function viewList(){
+  $("main").innerHTML = `
+    <div class="top"><div><h1>İlanlar</h1><p>Durumu buradan tek tıkla değiştirebilirsiniz; ★ işaretli ilan sitede "Haftanın ilanı" olur.</p></div>
+      <a class="btn btn-cta" href="#yeni">+ Yeni ilan</a></div>
+    <div class="toolbar">
+      <input class="inp search" id="fq" placeholder="Başlık, ilan no veya mahalle ara…" value="${esc(F.q)}">
+      <select class="inp" id="fst"><option value="">Tüm durumlar</option>${Object.entries(STATUS).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select>
+      <select class="inp" id="fdeal"><option value="">Satılık + kiralık</option><option value="satilik">Satılık</option><option value="kiralik">Kiralık</option></select>
+      <select class="inp" id="floc"><option value="">Tüm ilçeler</option>${NORM.ILCELER.map(x=>`<option>${x}</option>`).join("")}</select>
+      <select class="inp" id="fsort"><option value="upd">Son güncellenen</option><option value="new">En yeni</option><option value="pa">Fiyat (artan)</option><option value="pd">Fiyat (azalan)</option></select>
+    </div>
+    <div id="tblWrap"></div>`;
+  [["fst","st"],["fdeal","deal"],["floc","loc"],["fsort","sort"]].forEach(([id,k])=>{ $(id).value=F[k]; $(id).onchange=e=>{F[k]=e.target.value; drawTable();}; });
+  $("fq").oninput=e=>{F.q=e.target.value; drawTable();};
+  drawTable();
+}
+function drawTable(){
+  const q=NORM.fold(F.q);
+  let rows = LIST.filter(l=>(!F.st||l.status===F.st)&&(!F.deal||l.deal===F.deal)&&(!F.loc||l.loc===F.loc)&&(!q||NORM.fold(`${l.title} 3m-${1000+l.id} ${1000+l.id} ${l.mahalle||""} ${l.loc}`).includes(q)));
+  const S={upd:(a,b)=>new Date(b.updated_at)-new Date(a.updated_at),new:(a,b)=>b.id-a.id,pa:(a,b)=>a.price-b.price,pd:(a,b)=>b.price-a.price};
+  rows.sort(S[F.sort]);
+  if(!rows.length){ $("tblWrap").innerHTML=`<div class="card empty">${LIST.length?"Bu filtreye uyan ilan yok.":"Henüz ilan eklenmedi. <a href='#yeni'>İlk ilanı ekleyin →</a>"}</div>`; return; }
+  $("tblWrap").innerHTML = `<table class="tbl"><thead><tr><th></th><th>İlan</th><th class="hide-m">Fiyat</th><th>Durum</th><th class="hide-m" title="Haftanın ilanı">★</th><th class="hide-m">Son işlem</th><th></th></tr></thead><tbody>${
+    rows.map(l=>`<tr data-id="${l.id}">
+      <td>${l.photos?.[0]?`<img class="thumb" src="${esc(l.photos[0])}" alt="" loading="lazy">`:`<span class="thumb"></span>`}</td>
+      <td class="ttl"><b>${esc(l.title)}</b><small>3M-${1000+l.id} · ${l.deal==="satilik"?"Satılık":"Kiralık"} ${esc(l.type)} · ${esc(l.loc)}${l.mahalle?" / "+esc(l.mahalle):""}</small></td>
+      <td class="hide-m price num">${fmt(l.price)} ₺${l.deal==="kiralik"?"<small style='color:var(--muted)'>/ay</small>":""}</td>
+      <td><select class="st-sel st-${l.status}" data-st="${l.id}" aria-label="Durum">${Object.keys(STATUS).map(k=>`<option value="${k}" ${k===l.status?"selected":""}>${stLabel(k,l.deal)}</option>`).join("")}</select></td>
+      <td class="hide-m"><button class="star" data-star="${l.id}" aria-pressed="${!!l.featured}" title="Haftanın ilanı yap">★</button></td>
+      <td class="hide-m"><small style="color:var(--muted);font-weight:600">${ago(l.updated_at)}<br>${esc(staffName(l.updated_by||l.created_by))}</small></td>
+      <td><div class="acts"><a class="btn btn-soft btn-sm" href="#duzenle/${l.id}">Düzenle</a><button class="btn btn-ghost btn-sm" data-dup="${l.id}" title="Kopyasını oluştur">Kopyala</button>${isAdmin()?`<button class="btn btn-danger btn-sm" data-del="${l.id}">Sil</button>`:""}</div></td>
+    </tr>`).join("")}</tbody></table>`;
+  const w=$("tblWrap");
+  w.onchange = async e=>{ const s=e.target.closest("[data-st]"); if(!s) return; const id=+s.dataset.st;
+    const {error}=await sb.from("listings").update({status:s.value}).eq("id",id);
+    if(error) return toast(ERR(error),true);
+    await loadList(); drawTable(); toast(`İlan ${s.value==="yayinda"?"yayına alındı":"durumu güncellendi"}.`); };
+  w.onclick = async e=>{
+    const st=e.target.closest("[data-star]"), du=e.target.closest("[data-dup]"), de=e.target.closest("[data-del]");
+    if(st){ const id=+st.dataset.star, on=st.getAttribute("aria-pressed")!=="true";
+      if(on){ const prev=LIST.filter(l=>l.featured&&l.id!==id).map(l=>l.id); if(prev.length) await sb.from("listings").update({featured:false}).in("id",prev); }
+      const {error}=await sb.from("listings").update({featured:on}).eq("id",id); if(error) return toast(ERR(error),true);
+      await loadList(); drawTable(); toast(on?"Bu ilan artık sitede 'Haftanın ilanı'.":"Öne çıkarma kaldırıldı."); }
+    if(du){ const l=LIST.find(x=>x.id===+du.dataset.dup); const {id,created_at,updated_at,created_by,updated_by,...rest}=l;
+      const {data,error}=await sb.from("listings").insert({...rest,title:(rest.title+" (kopya)").slice(0,120),status:"taslak",featured:false,photos:[]}).select().single();
+      if(error) return toast(ERR(error),true); await loadList(); location.hash="#duzenle/"+data.id; toast("Kopya taslak olarak oluşturuldu; fotoğrafları ekleyin."); }
+    if(de){ const l=LIST.find(x=>x.id===+de.dataset.del);
+      if(!confirm(`"${l.title}" ilanı ve fotoğrafları kalıcı olarak silinsin mi?\n\nSadece sitede gizlemek için durumu "Pasif" yapabilirsiniz.`)) return;
+      const paths=(l.photos||[]).map(storagePath).filter(Boolean); if(paths.length) await sb.storage.from(BUCKET).remove(paths);
+      const {error}=await sb.from("listings").delete().eq("id",l.id); if(error) return toast(ERR(error),true);
+      await loadList(); drawTable(); toast("İlan silindi."); }
+  };
+}
+const storagePath = url => { const m=String(url).match(new RegExp(`/object/public/${BUCKET}/(.+)$`)); return m?decodeURIComponent(m[1]):null; };
+
+/* ================= İlan düzenleyici ================= */
+const EMPTY = {deal:"satilik",type:"Daire",title:"",loc:"",mahalle:"",price:null,rooms:3,salon:1,m2:null,bath:1,age:null,floor:"",heat:"",description:"",features:[],photos:[],status:"taslak",featured:false,agent_id:null};
+let E = null, fixes = [];
+function viewEditor(id){
+  const src = id ? LIST.find(l=>l.id===id) : null;
+  if(id && !src){ $("main").innerHTML=`<div class="card empty">İlan bulunamadı. <a href="#ilanlar">İlanlara dön</a></div>`; return; }
+  E = structuredClone(src || {...EMPTY, agent_id: profile.id}); fixes = [];
+  const opt = (arr,v) => arr.map(x=>`<option ${x===v?"selected":""}>${x}</option>`).join("");
+  $("main").innerHTML = `
+    <div class="top"><div><h1>${src?"İlanı düzenle":"Yeni ilan"}</h1><p>${src?`3M-${1000+src.id} · son işlem ${ago(src.updated_at)}, ${esc(staffName(src.updated_by||src.created_by))}`:"Nasıl yazarsanız yazın, sistem biçimi düzeltir; siz sadece bilgiyi girin."}</p></div>
+      <a class="btn btn-ghost" href="#ilanlar">← İlanlara dön</a></div>
+    <div class="ed">
+      <div class="col">
+        <div class="card quick sec">
+          <h3>⚡ Hızlı doldur</h3>
+          <p style="margin:-6px 0 12px;color:var(--muted);font-size:.9rem">Elinizdeki ilan metnini (WhatsApp mesajı, not, başka bir siteden kopyalanan ilan…) olduğu gibi yapıştırın; alanlar otomatik dolsun.</p>
+          <textarea class="inp" id="qText" style="min-height:90px" placeholder="Örn: Edremit Şabaniye mah. göl manzaralı 3+1 satılık daire, 145 m2, 3. kat, kombili, 4,25 milyon"></textarea>
+          <div style="margin-top:10px;display:flex;gap:10px;align-items:center"><button class="btn btn-navy btn-sm" id="qGo" type="button">Alanları doldur</button><span class="hint" id="qHint" style="margin:0"></span></div>
+        </div>
+
+        <div class="card sec">
+          <h3><span class="n">1</span>Temel bilgiler</h3>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px">
+            <div class="seg" id="eDeal"><button type="button" data-v="satilik">Satılık</button><button type="button" data-v="kiralik">Kiralık</button></div>
+            <select class="inp" id="eType" style="width:auto">${opt(NORM.TYPES,E.type)}</select>
+          </div>
+          <label class="label" for="eTitle">İlan başlığı</label>
+          <input class="inp" id="eTitle" maxlength="140" value="${esc(E.title)}" placeholder="Örn: Göl manzaralı, asansörlü 3+1 daire">
+          <div class="hint" id="hTitle"></div>
+          <div class="grid2" style="margin-top:8px">
+            <div><label class="label" for="eLoc">İlçe</label><input class="inp" id="eLoc" list="dlIlce" value="${esc(E.loc)}" placeholder="Yazın veya seçin"><datalist id="dlIlce">${NORM.ILCELER.map(x=>`<option value="${x}">`).join("")}</datalist><div class="hint" id="hLoc"></div></div>
+            <div><label class="label" for="eMah">Mahalle</label><input class="inp" id="eMah" list="dlMah" value="${esc(E.mahalle||"")}" placeholder="İsteğe bağlı"><datalist id="dlMah"></datalist><div class="hint" id="hMah"></div></div>
+          </div>
+        </div>
+
+        <div class="card sec">
+          <h3><span class="n">2</span>Fiyat ve özellikler</h3>
+          <div class="grid3">
+            <div><label class="label" for="ePrice" id="lPrice">Fiyat (₺)</label><input class="inp num" id="ePrice" inputmode="decimal" value="${E.price?fmt(E.price):""}" placeholder="4.250.000 veya 4,25 milyon"><div class="hint" id="hPrice"></div></div>
+            <div><label class="label" for="eM2">Net m²</label><input class="inp num" id="eM2" inputmode="numeric" value="${E.m2||""}" placeholder="145"><div class="hint" id="hM2"></div></div>
+            <div class="nonArsa"><label class="label" for="eRooms">Oda sayısı</label><input class="inp" id="eRooms" list="dlRooms" value="${E.type==="Arsa"?"":roomText(E)}" placeholder="3+1"><datalist id="dlRooms">${["1+0","1+1","2+1","3+1","4+1","4+2","5+1","5+2","6+1"].map(x=>`<option value="${x}">`).join("")}</datalist><div class="hint" id="hRooms"></div></div>
+            <div class="nonArsa"><label class="label" for="eBath">Banyo</label><input class="inp num" id="eBath" inputmode="numeric" value="${E.bath??""}"></div>
+            <div class="nonArsa"><label class="label" for="eAge">Bina yaşı</label><input class="inp" id="eAge" value="${E.age??""}" placeholder="5, sıfır veya 2019"><div class="hint" id="hAge"></div></div>
+            <div class="nonArsa"><label class="label" for="eFloor">Kat</label><input class="inp" id="eFloor" value="${esc(E.floor||"")}" placeholder="3 / 7, zemin, müstakil"><div class="hint" id="hFloor"></div></div>
+            <div class="nonArsa"><label class="label" for="eHeat">Isınma</label><input class="inp" id="eHeat" list="dlHeat" value="${esc(E.heat||"")}" placeholder="Doğalgaz kombi"><datalist id="dlHeat">${["Doğalgaz kombi","Merkezi","Yerden ısıtma","Kat kaloriferi","Soba","Klima"].map(x=>`<option value="${x}">`).join("")}</datalist></div>
+          </div>
+          <span class="label" style="margin-top:16px">Öne çıkan özellikler</span>
+          <div class="chips" id="eFeat">${NORM.FEATURES.map(f=>`<label><input type="checkbox" value="${f}" ${E.features?.includes(f)?"checked":""}>${f}</label>`).join("")}</div>
+        </div>
+
+        <div class="card sec">
+          <h3><span class="n">3</span>Açıklama</h3>
+          <textarea class="inp" id="eDesc" style="min-height:150px" placeholder="Evin konumu, çevresi, öne çıkan yanları…">${esc(E.description||"")}</textarea>
+          <div class="hint" id="hDesc"></div>
+        </div>
+
+        <div class="card sec">
+          <h3><span class="n">4</span>Fotoğraflar</h3>
+          <div class="drop" id="drop" tabindex="0" role="button"><b style="color:var(--ink)">Fotoğrafları buraya sürükleyin</b> veya tıklayıp seçin<br><small>Telefon fotoğrafları dahil her boyut olur; sistem döndürür, küçültür ve sıkıştırır. İlk fotoğraf kapak olur, sürükleyerek sıralayın.</small></div>
+          <input type="file" id="eFiles" accept="image/*" multiple class="sr-only">
+          <div class="photos" id="photos"></div>
+        </div>
+      </div>
+
+      <div class="side-sticky">
+        <div class="card sec" style="padding:18px">
+          <h3 style="margin-bottom:10px">Yayın</h3>
+          <label class="label" for="eStatus">Durum</label>
+          <select class="inp" id="eStatus">${Object.entries(STATUS).map(([k,v])=>`<option value="${k}" ${k===E.status?"selected":""}>${v}</option>`).join("")}</select>
+          <label class="label" for="eAgent" style="margin-top:12px">Sorumlu danışman</label>
+          <select class="inp" id="eAgent"><option value="">—</option>${STAFF.filter(s=>s.active).map(s=>`<option value="${s.id}" ${s.id===E.agent_id?"selected":""}>${esc(s.full_name||s.email)}</option>`).join("")}</select>
+          <label style="display:flex;gap:8px;align-items:center;margin-top:12px;font-weight:600;cursor:pointer"><input type="checkbox" id="eFeatured" ${E.featured?"checked":""} style="accent-color:var(--orange)"> Sitede "Haftanın ilanı" yap</label>
+          <div class="savebar" style="margin-top:16px">
+            <button class="btn btn-cta" id="saveBtn" style="flex:1">Kaydet</button>
+            ${src && isAdmin() ? `<button class="btn btn-danger" id="delBtn" title="Sil">Sil</button>` : ""}
+          </div>
+          <div class="hint" id="saveHint" style="text-align:center"></div>
+        </div>
+        <div><span class="label">Sitede böyle görünecek</span><div class="pv" id="pv"></div></div>
+        <div class="card" style="padding:18px"><span class="label">Akıllı kontrol</span><div class="checks" id="checks"></div></div>
+      </div>
+    </div>`;
+  bindEditor(src);
+}
+
+function bindEditor(src){
+  const setDeal = v => { E.deal=v; document.querySelectorAll("#eDeal button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===v)); $("lPrice").textContent = v==="kiralik"?"Aylık kira (₺)":"Fiyat (₺)"; refresh(); };
+  $("eDeal").onclick = e=>{ const b=e.target.closest("button"); if(b) setDeal(b.dataset.v); };
+  setDeal(E.deal);
+  const typeVis = () => document.querySelectorAll(".nonArsa").forEach(x=>x.classList.toggle("hidden", E.type==="Arsa"));
+  $("eType").onchange = e=>{ E.type=e.target.value; typeVis(); refresh(); }; typeVis();
+  const fillMah = () => { $("dlMah").innerHTML=(MAH[E.loc]||[]).map(m=>`<option value="${esc(m)}">`).join(""); }; fillMah();
+
+  // Her alan: yazarken önizleme, çıkınca düzelt
+  const fix = (id, hintId, fn, label) => {
+    const el=$(id);
+    el.addEventListener("input", ()=>{ fn(el.value, false); refresh(); });
+    el.addEventListener("blur", ()=>{
+      const before=el.value, after=fn(before, true);
+      if(after!=null && String(after)!==before && before.trim()){ el.value=after; el.classList.remove("fixed"); void el.offsetWidth; el.classList.add("fixed");
+        if(hintId){ $(hintId).className="hint ok"; $(hintId).textContent=`✓ Düzeltildi: “${before.trim().slice(0,40)}” → “${String(after).slice(0,40)}”`; }
+        fixes.push(`${label}: “${before.trim().slice(0,30)}” → “${String(after).slice(0,30)}”`); }
+      refresh();
+    });
+  };
+  fix("eTitle","hTitle",(v,done)=>{ E.title=NORM.title(v); return done?E.title:null; },"Başlık");
+  fix("eLoc","hLoc",(v,done)=>{ const x=NORM.ilce(v); E.loc=x||v.trim(); if(done){ fillMah(); if(v.trim()&&!x){ $("hLoc").className="hint"; $("hLoc").textContent="⚠ Bu ilçe tanınmadı; listeden seçin."; return null;} } return done?(x||v):null; },"İlçe");
+  fix("eMah","hMah",(v,done)=>{ let x=NORM.mahalle(v); const list=MAH[E.loc]||[]; const hit=list.find(m=>NORM.fold(m)===NORM.fold(x)); if(hit) x=hit; E.mahalle=x; return done?x:null; },"Mahalle");
+  fix("ePrice","hPrice",(v,done)=>{ const n=NORM.price(v); E.price=n; if(!done){ $("hPrice").className="hint"; $("hPrice").textContent = n?`${fmt(n)} ₺ olarak kaydedilecek`:""; } return done&&n?fmt(n):null; },"Fiyat");
+  fix("eM2","hM2",(v,done)=>{ const n=NORM.int(v,null); E.m2=n; return done&&n?String(n):null; },"m²");
+  fix("eRooms","hRooms",(v,done)=>{ const r=NORM.rooms(v); if(r){E.rooms=r.rooms;E.salon=r.salon;} return done&&r?`${r.rooms}+${r.salon}`:null; },"Oda");
+  fix("eBath",null,(v,done)=>{ E.bath=NORM.int(v,0); return done?String(E.bath):null; },"Banyo");
+  fix("eAge","hAge",(v,done)=>{ E.age=NORM.age(v); return done&&E.age!=null?String(E.age):null; },"Bina yaşı");
+  fix("eFloor","hFloor",(v,done)=>{ E.floor=NORM.floor(v); return done?E.floor:null; },"Kat");
+  fix("eHeat",null,(v,done)=>{ E.heat=NORM.heat(v); return done?E.heat:null; },"Isınma");
+  fix("eDesc",null,(v,done)=>{ E.description=NORM.description(v); return done?E.description:null; },"Açıklama");
+  $("eDesc").addEventListener("input",()=>{ const auto=NORM.features(E.description); auto.forEach(f=>{ const cb=document.querySelector(`#eFeat input[value="${f}"]`); if(cb&&!cb.checked&&!cb.dataset.touched){ cb.checked=true; } }); readFeat(); });
+  const readFeat = () => { E.features=[...document.querySelectorAll("#eFeat input:checked")].map(x=>x.value); refresh(); };
+  $("eFeat").onchange = e=>{ e.target.dataset.touched=1; readFeat(); };
+  $("eStatus").onchange = e=>{ E.status=e.target.value; refresh(); };
+  $("eAgent").onchange = e=>{ E.agent_id=e.target.value||null; };
+  $("eFeatured").onchange = e=>{ E.featured=e.target.checked; };
+
+  // Hızlı doldur
+  $("qGo").onclick = ()=>{
+    const p=NORM.parseFree($("qText").value); const n=Object.keys(p).length;
+    if(!n){ $("qHint").textContent="Metinden bilgi çıkarılamadı; alanları elle doldurun."; return; }
+    if(p.deal) setDeal(p.deal);
+    if(p.type){ E.type=p.type; $("eType").value=p.type; typeVis(); }
+    const put=(id,val)=>{ if(val==null||val==="") return; $(id).value=val; $(id).dispatchEvent(new Event("blur")); };
+    put("eTitle",p.title); put("eLoc",p.loc); put("eMah",p.mahalle); put("ePrice",p.price!=null?String(p.price):null); put("eM2",p.m2!=null?String(p.m2):null);
+    if(p.rooms!=null) put("eRooms",`${p.rooms}+${p.salon??1}`); put("eBath",p.bath!=null?String(p.bath):null); put("eAge",p.age!=null?String(p.age):null);
+    put("eFloor",p.floor); put("eHeat",p.heat);
+    if(p.description && !$("eDesc").value.trim()) put("eDesc",p.description);
+    (p.features||[]).forEach(f=>{ const cb=document.querySelector(`#eFeat input[value="${f}"]`); if(cb) cb.checked=true; }); readFeat();
+    if(!p.title && !$("eTitle").value.trim()) autoTitle();
+    $("qHint").className="hint ok"; $("qHint").textContent=`✓ ${n} bilgi dolduruldu. Kontrol edip kaydedin.`;
+  };
+  const autoTitle = () => { const r=E.type!=="Arsa"&&E.rooms?` ${E.rooms}+${E.salon??1}`:""; const t=`${E.mahalle?E.mahalle+"'de ":E.loc?E.loc+"'de ":""}${E.deal==="kiralik"?"kiralık":"satılık"}${r} ${E.type.toLocaleLowerCase("tr")}`.trim(); $("eTitle").value=NORM.title(t); E.title=NORM.title(t); };
+
+  // Fotoğraflar
+  const drop=$("drop"), files=$("eFiles");
+  drop.onclick=()=>files.click(); drop.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); files.click(); } };
+  files.onchange=()=>{ addFiles(files.files); files.value=""; };
+  ["dragenter","dragover"].forEach(t=>drop.addEventListener(t,e=>{ if(e.dataTransfer?.types?.includes("Files")){ e.preventDefault(); drop.classList.add("over"); } }));
+  ["dragleave","drop"].forEach(t=>drop.addEventListener(t,()=>drop.classList.remove("over")));
+  drop.addEventListener("drop",e=>{ e.preventDefault(); addFiles(e.dataTransfer.files); });
+  drawPhotos();
+
+  $("saveBtn").onclick = ()=>save(src);
+  if($("delBtn")) $("delBtn").onclick = async ()=>{ if(!confirm("Bu ilan kalıcı olarak silinsin mi?")) return;
+    const paths=(src.photos||[]).map(storagePath).filter(Boolean); if(paths.length) await sb.storage.from(BUCKET).remove(paths);
+    const {error}=await sb.from("listings").delete().eq("id",src.id); if(error) return toast(ERR(error),true);
+    await loadList(); location.hash="#ilanlar"; toast("İlan silindi."); };
+  refresh();
+}
+
+let uploading = 0;
+async function processImage(file){
+  const bmp = await createImageBitmap(file, {imageOrientation:"from-image"}).catch(()=>null);
+  if(!bmp) throw new Error(`${file.name} okunamadı (desteklenmeyen biçim olabilir; HEIC ise telefonda "En uyumlu" ayarıyla paylaşın).`);
+  const MAX=1600, k=Math.min(1, MAX/Math.max(bmp.width,bmp.height));
+  const w=Math.round(bmp.width*k), h=Math.round(bmp.height*k);
+  const c=document.createElement("canvas"); c.width=w; c.height=h; c.getContext("2d").drawImage(bmp,0,0,w,h);
+  let blob = await new Promise(r=>c.toBlob(r,"image/webp",.82));
+  if(!blob || blob.type!=="image/webp") blob = await new Promise(r=>c.toBlob(r,"image/jpeg",.84));
+  return {blob, w, h, small: Math.max(bmp.width,bmp.height)<900};
+}
+async function addFiles(list){
+  const arr=[...list].filter(f=>/^image\//.test(f.type)||/\.(heic|heif|jpe?g|png|webp)$/i.test(f.name));
+  if(!arr.length) return toast("Lütfen fotoğraf dosyası seçin.",true);
+  if((E.photos||[]).length+arr.length>30) return toast("Bir ilana en fazla 30 fotoğraf eklenebilir.",true);
+  for(const f of arr){
+    const tmp={url:URL.createObjectURL(f),pending:true}; E.photos.push(tmp); uploading++; drawPhotos(); refresh();
+    try{
+      const {blob,small}=await processImage(f);
+      const ext=blob.type==="image/webp"?"webp":"jpg";
+      const path=`${new Date().toISOString().slice(0,7)}/${crypto.randomUUID()}.${ext}`;
+      const {error}=await sb.storage.from(BUCKET).upload(path, blob, {contentType:blob.type, cacheControl:"31536000"});
+      if(error) throw error;
+      const {data}=sb.storage.from(BUCKET).getPublicUrl(path);
+      E.photos[E.photos.indexOf(tmp)] = data.publicUrl;
+      if(small) toast(`${f.name} düşük çözünürlüklü; mümkünse daha net bir fotoğraf ekleyin.`);
+    }catch(err){ E.photos.splice(E.photos.indexOf(tmp),1); toast(ERR(err),true); }
+    uploading--; drawPhotos(); refresh();
+  }
+}
+function drawPhotos(){
+  const box=$("photos"); if(!box) return;
+  box.innerHTML = E.photos.map((p,i)=>{ const u=typeof p==="string"?p:p.url, pend=typeof p!=="string";
+    return `<div class="ph" draggable="${!pend}" data-i="${i}">${i===0?`<span class="cover">KAPAK</span>`:""}<img src="${esc(u)}" alt="">
+      ${pend?`<span class="bar" style="width:60%"></span>`:`<div class="tools">${i>0?`<button type="button" data-cov="${i}" title="Kapak yap">★</button>`:""}<button type="button" data-l="${i}" title="Sola">‹</button><button type="button" data-r="${i}" title="Sağa">›</button><button type="button" data-x="${i}" title="Kaldır">✕</button></div>`}</div>`; }).join("");
+  box.onclick = e=>{ const b=e.target.closest("button"); if(!b) return; const P=E.photos;
+    if(b.dataset.x){ const [rm]=P.splice(+b.dataset.x,1); (E.removed ||= []).push(rm); }
+    else if(b.dataset.cov){ const [x]=P.splice(+b.dataset.cov,1); P.unshift(x); }
+    else if(b.dataset.l){ const i=+b.dataset.l; if(i>0) [P[i-1],P[i]]=[P[i],P[i-1]]; }
+    else if(b.dataset.r){ const i=+b.dataset.r; if(i<P.length-1) [P[i+1],P[i]]=[P[i],P[i+1]]; }
+    drawPhotos(); refresh(); };
+  let from=null;
+  box.ondragstart=e=>{ const ph=e.target.closest(".ph"); if(!ph) return; from=+ph.dataset.i; ph.classList.add("dragging"); };
+  box.ondragover=e=>{ if(from!=null) e.preventDefault(); };
+  box.ondrop=e=>{ const ph=e.target.closest(".ph"); if(from==null||!ph) return; e.preventDefault(); const to=+ph.dataset.i; const [x]=E.photos.splice(from,1); E.photos.splice(to,0,x); from=null; drawPhotos(); refresh(); };
+  box.ondragend=()=>{ from=null; drawPhotos(); };
+}
+
+function refresh(){
+  if(!$("pv")) return;
+  const l=E, cover=l.photos.find(p=>typeof p==="string") || (l.photos[0]&&l.photos[0].url);
+  const specs=[l.type!=="Arsa"&&l.type!=="Dükkan"&&l.rooms?`${l.rooms}+${l.salon??1}`:null, l.m2?`${fmt(l.m2)} m²`:null, l.type==="Arsa"||l.age==null?null:(l.age===0?"Sıfır bina":`${l.age} yaşında`), l.type!=="Arsa"&&l.bath?`${l.bath} banyo`:null].filter(Boolean);
+  $("pv").innerHTML = `<div class="pic">${cover?`<img src="${esc(cover)}" alt="">`:""}<span class="badge ${l.deal}">${l.deal==="satilik"?"Satılık":"Kiralık"} · ${esc(l.type)}</span></div>
+    <div class="body"><div class="p num">${l.price?fmt(l.price)+" ₺"+(l.deal==="kiralik"?" <small style='font-size:.8rem;color:var(--muted)'>/ ay</small>":""):"Fiyat girilmedi"}</div>
+    <h4>${esc(l.title||"İlan başlığı")}</h4><div class="loc">${esc(l.mahalle?l.mahalle+", ":"")}${esc(l.loc||"İlçe")}, Van</div>
+    <div class="specs">${specs.map(s=>`<span>${s}</span>`).join("")}</div></div>`;
+  const {warnings}=NORM.listing({...l});
+  const out=[];
+  if(!l.photos.length) out.push(["w","Fotoğraf yok. Fotoğraflı ilanlar çok daha fazla ilgi görür."]);
+  else if(l.photos.length<4) out.push(["w",`${l.photos.length} fotoğraf var; en az 5–6 fotoğraf önerilir.`]);
+  if((l.description||"").length<60) out.push(["w","Açıklama kısa. Konum, çevre ve evin artılarını 2–3 cümleyle yazın."]);
+  warnings.forEach(w=>out.push(["w",w]));
+  if(uploading) out.push(["f",`${uploading} fotoğraf yükleniyor…`]);
+  if(!out.length) out.push(["g","Her şey yolunda. İlan yayına hazır."]);
+  fixes.slice(-4).forEach(f=>out.push(["f","Otomatik düzeltme · "+f]));
+  $("checks").innerHTML = out.map(([k,t])=>`<div class="${k}">${k==="g"?"✓":k==="f"?"✎":"⚠"}<span>${esc(t)}</span></div>`).join("");
+  const bad = !l.title || !NORM.ILCELER.includes(l.loc) || !l.price || !l.m2;
+  $("saveBtn").textContent = l.status==="yayinda"||l.status==="opsiyonlu" ? "Kaydet ve yayınla" : "Kaydet";
+  $("saveBtn").disabled = !!uploading;
+  $("saveHint").textContent = bad ? "Başlık, ilçe, fiyat ve m² zorunludur." : "";
+}
+
+async function save(src){
+  ["eTitle","eLoc","eMah","ePrice","eM2","eRooms","eAge","eFloor","eHeat","eDesc"].forEach(id=>{ const el=$(id); if(el && !el.closest(".hidden")) el.dispatchEvent(new Event("blur")); });
+  const {value:v, warnings}=NORM.listing({...E});
+  if(!v.title || v.title.length<3) return toast("İlan başlığı yazın.",true);
+  if(!NORM.ILCELER.includes(v.loc)) return toast("Geçerli bir ilçe seçin.",true);
+  if(!v.price) return toast("Fiyat okunamadı; rakamla yazın.",true);
+  if(!v.m2) return toast("Metrekare girin.",true);
+  if(uploading) return toast("Fotoğraflar yükleniyor, birkaç saniye bekleyin.",true);
+  const hard = warnings.filter(w=>/olağan dışı|çok yüksek|çok düşük/.test(w));
+  if(hard.length && (v.status==="yayinda") && !confirm(hard.join("\n")+"\n\nYine de yayınlansın mı?")) return;
+  const row={deal:v.deal,type:v.type,title:v.title,loc:v.loc,mahalle:v.mahalle||null,price:v.price,rooms:v.type==="Arsa"?0:(v.rooms||0),salon:v.type==="Arsa"?0:(v.salon??1),m2:v.m2,bath:v.bath||0,age:v.type==="Arsa"?null:(v.age??null),floor:v.floor||"",heat:v.heat||"",description:v.description||"",features:E.features||[],photos:E.photos.filter(p=>typeof p==="string"),status:v.status,featured:!!E.featured,agent_id:E.agent_id||null};
+  $("saveBtn").disabled=true;
+  let res;
+  if(src) res = await sb.from("listings").update(row).eq("id",src.id).select().single();
+  else res = await sb.from("listings").insert(row).select().single();
+  if(res.error){ $("saveBtn").disabled=false; return toast(ERR(res.error),true); }
+  if(row.featured){ const others=LIST.filter(l=>l.featured&&l.id!==res.data.id).map(l=>l.id); if(others.length) await sb.from("listings").update({featured:false}).in("id",others); }
+  const gone=(E.removed||[]).filter(p=>typeof p==="string" && !row.photos.includes(p)).map(storagePath).filter(Boolean);
+  if(gone.length) await sb.storage.from(BUCKET).remove(gone);
+  await loadList();
+  toast(row.status==="yayinda"||row.status==="opsiyonlu" ? `Kaydedildi · 3M-${1000+res.data.id} sitede yayında.` : `Kaydedildi (${STATUS[row.status]}). Sitede görünmez.`);
+  if(!src) location.hash="#duzenle/"+res.data.id; else viewEditor(src.id);
+}
+
+/* ================= Personel ================= */
+async function viewStaff(){
+  await loadStaff();
+  const {data:inv} = await sb.from("staff_invites").select("*").order("created_at");
+  const cnt = id => LIST.filter(l=>l.agent_id===id&&(l.status==="yayinda"||l.status==="opsiyonlu")).length;
+  $("main").innerHTML = `
+    <div class="top"><div><h1>Personel</h1><p>Personeli davet edin, rolünü belirleyin, ayrılanları pasife alın.</p></div></div>
+    <div class="ed" style="grid-template-columns:minmax(0,1fr) 340px">
+      <div class="col">
+        <table class="tbl"><thead><tr><th>Ad / e-posta</th><th class="hide-m">Telefon</th><th>Rol</th><th class="hide-m">Yayında ilan</th><th>Durum</th></tr></thead><tbody>${
+          STAFF.map(s=>`<tr><td class="ttl"><b>${esc(s.full_name||"—")}</b><small>${esc(s.email)}</small></td><td class="hide-m">${esc(s.phone||"—")}</td>
+            <td><select class="inp" style="padding:6px 10px;width:auto" data-role="${s.id}" ${s.id===profile.id?"disabled title='Kendi rolünüzü değiştiremezsiniz'":""}><option value="danisman" ${s.role==="danisman"?"selected":""}>Danışman</option><option value="admin" ${s.role==="admin"?"selected":""}>Yönetici</option></select></td>
+            <td class="hide-m">${cnt(s.id)}</td>
+            <td>${s.id===profile.id?`<span class="pill st-yayinda">Siz</span>`:`<button class="btn btn-sm ${s.active?"btn-soft":"btn-cta"}" data-act="${s.id}">${s.active?"Pasife al":"Aktifleştir"}</button>`}</td></tr>`).join("")}</tbody></table>
+        ${inv?.length?`<div class="card"><h3 style="margin-bottom:10px">Bekleyen davetler</h3>${inv.map(i=>`<div style="display:flex;justify-content:space-between;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)"><span><b>${esc(i.full_name||i.email)}</b> <small style="color:var(--muted)">${esc(i.email)} · ${i.role==="admin"?"Yönetici":"Danışman"}</small></span><span style="display:flex;gap:6px"><a class="btn btn-soft btn-sm" target="_blank" rel="noopener" href="${waInvite(i)}">WhatsApp ile hatırlat</a><button class="btn btn-ghost btn-sm" data-uninv="${esc(i.email)}">İptal</button></span></div>`).join("")}</div>`:""}
+      </div>
+      <form class="card" id="invForm" novalidate>
+        <h3 style="margin-bottom:14px">Personel davet et</h3>
+        <label class="label" for="iName">Ad soyad</label><input class="inp" id="iName" autocomplete="off">
+        <label class="label" for="iEmail" style="margin-top:12px">E-posta</label><input class="inp" id="iEmail" type="email" autocomplete="off">
+        <label class="label" for="iRole" style="margin-top:12px">Rol</label>
+        <select class="inp" id="iRole"><option value="danisman">Danışman: ilan ekler ve düzenler</option><option value="admin">Yönetici: + personel yönetimi ve silme</option></select>
+        <button class="btn btn-cta" style="width:100%;margin-top:16px">Davet oluştur</button>
+        <p class="hint" style="margin-top:10px">Davetten sonra kişi <b>ucgulgroup.com/panel</b> adresinde bu e-postayla "Hesap oluştur" der ve kendi şifresini belirler.</p>
+        <div id="invOut"></div>
+      </form>
+    </div>`;
+  $("main").onchange = async e=>{ const r=e.target.closest("[data-role]"); if(!r) return;
+    const {error}=await sb.from("profiles").update({role:r.value}).eq("id",r.dataset.role); if(error) return toast(ERR(error),true); toast("Rol güncellendi."); loadStaff(); };
+  $("main").onclick = async e=>{
+    const a=e.target.closest("[data-act]"), u=e.target.closest("[data-uninv]");
+    if(a){ const s=STAFF.find(x=>x.id===a.dataset.act); if(s.active && !confirm(`${s.full_name||s.email} pasife alınsın mı? Panele giremez; ilanları silinmez.`)) return;
+      const {error}=await sb.from("profiles").update({active:!s.active}).eq("id",s.id); if(error) return toast(ERR(error),true); toast(s.active?"Personel pasife alındı.":"Personel aktifleştirildi."); viewStaff(); }
+    if(u){ await sb.from("staff_invites").delete().eq("email",u.dataset.uninv); toast("Davet iptal edildi."); viewStaff(); }
+  };
+  $("invForm").onsubmit = async e=>{ e.preventDefault();
+    const email=$("iEmail").value.trim().toLowerCase(), name=NORM.title($("iName").value), role=$("iRole").value;
+    if(!/^\S+@\S+\.\S+$/.test(email)) return toast("Geçerli bir e-posta yazın.",true);
+    if(STAFF.some(s=>s.email===email)) return toast("Bu e-posta zaten personel listesinde.",true);
+    const {error}=await sb.from("staff_invites").upsert({email,full_name:name,role}); if(error) return toast(ERR(error),true);
+    toast("Davet oluşturuldu."); await viewStaff();
+    $("invOut").innerHTML=`<div class="msg ok" style="margin-top:12px">${esc(name||email)} davet edildi. <a target="_blank" rel="noopener" href="${waInvite({email,full_name:name,role})}">Giriş bilgisini WhatsApp'tan gönderin →</a></div>`;
+  };
+}
+const waInvite = i => `https://wa.me/?text=${encodeURIComponent(`Merhaba ${(i.full_name||"").split(" ")[0]}, 3M Yapı yönetim paneline ${i.role==="admin"?"yönetici":"danışman"} olarak eklendiniz.\n\n1) ${location.origin}/panel/ adresine girin\n2) "Hesap oluştur"a basın\n3) E-posta: ${i.email}\n4) Kendi şifrenizi belirleyin, e-postanıza gelen onay bağlantısına tıklayın.`)}`;
+
+/* ================= Hesabım ================= */
+function viewAccount(){
+  $("main").innerHTML = `
+    <div class="top"><div><h1>Hesabım</h1><p>${esc(profile.email)} · ${profile.role==="admin"?"Yönetici":"Danışman"}</p></div></div>
+    <div class="grid2" style="align-items:start">
+      <form class="card" id="accForm"><h3 style="margin-bottom:14px">Bilgilerim</h3>
+        <label class="label" for="pName">Ad soyad</label><input class="inp" id="pName" value="${esc(profile.full_name||"")}">
+        <label class="label" for="pPhone" style="margin-top:12px">Telefon</label><input class="inp" id="pPhone" type="tel" value="${esc(profile.phone||"")}" placeholder="0545 233 65 20">
+        <button class="btn btn-cta" style="margin-top:16px">Kaydet</button></form>
+      <form class="card" id="pwForm"><h3 style="margin-bottom:14px">Şifre değiştir</h3>
+        <label class="label" for="pPw">Yeni şifre</label><input class="inp" id="pPw" type="password" autocomplete="new-password">
+        <p class="hint">En az 8 karakter; harf ve rakam içersin.</p>
+        <button class="btn btn-navy" style="margin-top:8px">Şifreyi güncelle</button></form>
+    </div>`;
+  const phoneFmt = v => { let d=v.replace(/\D/g,""); if(d.startsWith("90")) d=d.slice(2); if(d.length===10) d="0"+d; return d.length===11?`${d.slice(0,4)} ${d.slice(4,7)} ${d.slice(7,9)} ${d.slice(9)}`:v.trim(); };
+  $("pPhone").onblur=e=>e.target.value=phoneFmt(e.target.value);
+  $("accForm").onsubmit=async e=>{ e.preventDefault(); const full_name=NORM.title($("pName").value), phone=phoneFmt($("pPhone").value);
+    const {error}=await sb.from("profiles").update({full_name,phone}).eq("id",profile.id); if(error) return toast(ERR(error),true);
+    Object.assign(profile,{full_name,phone}); $("pName").value=full_name; $("meName").textContent=full_name||profile.email; await loadStaff(); toast("Bilgileriniz kaydedildi."); };
+  $("pwForm").onsubmit=async e=>{ e.preventDefault(); const p=$("pPw").value;
+    if(p.length<8||!/\d/.test(p)||!/\p{L}/u.test(p)) return toast("Şifre en az 8 karakter olmalı, harf ve rakam içermeli.",true);
+    const {error}=await sb.auth.updateUser({password:p}); if(error) return toast(ERR(error),true); $("pPw").value=""; toast("Şifreniz güncellendi."); };
+}
+
+if(/type=recovery/.test(location.hash)) recovering=true;
+boot();
+</script>
+</body>
+</html>
